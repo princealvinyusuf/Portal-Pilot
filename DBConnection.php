@@ -1,7 +1,7 @@
 <?php
 if(!defined('host')) define('host',"localhost");
-if(!defined('username')) define('username',"root");
-if(!defined('password')) define('password',"");
+if(!defined('username')) define('username',"alvin");
+if(!defined('password')) define('password',"admin");
 if(!defined('db_tbl')) define('db_tbl',"audit_trailing");
 
 Class DBConnection{
