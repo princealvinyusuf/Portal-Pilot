@@ -1,5 +1,5 @@
 <?php
-if(!defined('host')) define('host',"localhost");
+if(!defined('host')) define('host',"188.166.233.110");
 if(!defined('username')) define('username',"alvin");
 if(!defined('password')) define('password',"admin");
 if(!defined('db_tbl')) define('db_tbl',"audit_trailing");
