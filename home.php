@@ -8,10 +8,10 @@
             <table class="table table-bordered table-striped table-hover">
                 <thead>
                     <tr>
-                        <th class="py-1 px-2">#</th>
+                        <th class="py-1 px-2"></th>
                         <th class="py-1 px-2">First Name</th>
                         <th class="py-1 px-2">Last Name</th>
-                        <th class="py-1 px-2">Contact #</th>
+                        <th class="py-1 px-2">Contact</th>
                         <th class="py-1 px-2">Address</th>
                         <th class="py-1 px-2">Action</th>
                     </tr>
@@ -25,7 +25,7 @@
                     <tr>
                         <td class="py-1 px-2"><?php echo $i++ ?></td>
                         <td class="py-1 px-2"><?php echo $row['firstname'] ?></td>
-                        <td class="py-1 px-2"><?php echo $row['firstname'] ?></td>
+                        <td class="py-1 px-2"><?php echo $row['lastname'] ?></td>
                         <td class="py-1 px-2"><?php echo $row['contact'] ?></td>
                         <td class="py-1 px-2"><?php echo $row['address'] ?></td>
                         <td class="py-1 px-2 text-center">
@@ -62,7 +62,7 @@
             uni_modal('Edit Member Details',"manage_member.php?id="+$(this).attr('data-id'));
         })
         $('.delete_data').click(function(){
-            _conf("Ar you sure to delete <b>"+$(this).attr('data-name')+"</b> from member list?","delete_data",[$(this).attr('data-id')])
+            _conf("Are you sure to delete <b>"+$(this).attr('data-name')+"</b> from member list?","delete_data",[$(this).attr('data-id')])
         })
         $('.view_data').click(function(){
             uni_modal('View Member Details',"view_member.php?id="+$(this).attr('data-id'));

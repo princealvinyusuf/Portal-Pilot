@@ -1,6 +1,6 @@
 <div class="container py-5">
     <div class="d-flex w-100">
-        <h3 class="col-auto flex-grow-1"><b>Audit Trail</b></h3>
+        <h3 class="col-auto flex-grow-1"><b>Audit Log</b></h3>
         <button class="btn btn-sm btn-primary rounded-0" type="button" onclick="location.reload()"><i class="fa fa-retweet"></i> Refresh List</button>
     </div>
     <hr>
@@ -9,8 +9,8 @@
             <table class="table table-bordered table-striped table-hover">
                 <thead>
                     <tr>
-                        <th class="py-1 px-2">#</th>
-                        <th class="py-1 px-2">DateTime</th>
+                        <th class="py-1 px-2"></th>
+                        <th class="py-1 px-2">Date Time</th>
                         <th class="py-1 px-2">Username</th>
                         <th class="py-1 px-2">Action Made</th>
                     </tr>

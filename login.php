@@ -15,7 +15,7 @@ require_once('./DBConnection.php');
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LOGIN | Audit Trailing</title>
+    <title>Portal Pilot</title>
     <link rel="stylesheet" href="./css/bootstrap.min.css">
     <script src="./js/jquery-3.6.0.min.js"></script>
     <script src="./js/popper.min.js"></script>
@@ -25,24 +25,32 @@ require_once('./DBConnection.php');
         html, body{
             height:100%;
         }
+        body {
+            background-image: url('images/background.jpg');
+            background-size: cover;
+            background-position: center;
+        }
     </style>
 </head>
-<body class="bg-dark bg-gradient">
+<body>
    <div class="h-100 d-flex jsutify-content-center align-items-center">
        <div class='w-100'>
-        <h3 class="py-5 text-center text-light">Audit Trailing/Audit Log</h3>
+        <h3 class="py-5 text-center text-light"><strong>Welcome to Portal Pilot</strong></h3>
         <div class="card my-3 col-md-4 offset-md-4">
             <div class="card-body">
                 <form action="" id="login-form">
-                    <center><small>Please Enter your system credential.</small></center>
+                    <center><strong>Plese enter your access credential</strong></center>
+                    <br>
                     <div class="form-group">
                         <label for="username" class="control-label">Username</label>
                         <input type="text" id="username" autofocus name="username" class="form-control form-control-sm rounded-0" required>
                     </div>
+                    <br>
                     <div class="form-group">
                         <label for="password" class="control-label">Password</label>
                         <input type="password" id="password" autofocus name="password" class="form-control form-control-sm rounded-0" required>
                     </div>
+                    <br>
                     <div class="form-group d-flex w-100 justify-content-end">
                         <button class="btn btn-sm btn-primary rounded-0 my-1">Login</button>
                     </div>
@@ -51,6 +59,13 @@ require_once('./DBConnection.php');
         </div>
        </div>
    </div>
+
+    <footer class="footer mt-auto py-3">
+        <div class="container">
+            <span class="text-muted"> Copyright@princealvinyusuf | BRI IT CAMP 2024 | SDK </span>
+        </div>
+    </footer>
+        
 </body>
 <script>
     $(function(){

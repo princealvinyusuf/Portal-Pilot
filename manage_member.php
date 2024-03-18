@@ -22,7 +22,7 @@ if(isset($_GET['id'])){
             <input type="text" name="lastname" class="form-control form-control-sm rounded-0" value="<?php echo isset($lastname) ? $lastname : "" ?>" required>
         </div>
         <div class="form-group">
-            <label for="contact" class="control-label">Contact #</label>
+            <label for="contact" class="control-label">Contact</label>
             <input type="text" name="contact" class="form-control form-control-sm rounded-0" value="<?php echo isset($contact) ? $contact : "" ?>" required>
         </div>
         <div class="form-group">
