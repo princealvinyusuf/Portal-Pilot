@@ -1,51 +1,70 @@
-<?php 
+<?php
 session_start();
-require_once('DBConnection.php');
+require_once ('DBConnection.php');
 
-Class Actions extends DBConnection{
-    function __construct(){
+class Actions extends DBConnection
+{
+    function __construct()
+    {
         parent::__construct();
     }
-    function __destruct(){
+    function __destruct()
+    {
         parent::__destruct();
     }
-    function save_log($data=array()){
+    function save_log($data = array())
+    {
         // Data array paramateres
-            // user_id = user unique id
-            // action_made = action made by the user
-            
-        if(count($data) > 0){
+        // user_id = user unique id
+        // action_made = action made by the user
+
+        if (count($data) > 0) {
             extract($data);
             $sql = "INSERT INTO `logs` (`user_id`,`action_made`) VALUES ('{$user_id}','{$action_made}')";
             $save = $this->conn->query($sql);
-            if(!$save){
-                die($sql." <br> ERROR:".$this->conn->error);
+            if (!$save) {
+                die ($sql . " <br> ERROR:" . $this->conn->error);
             }
         }
         return true;
     }
-    function login(){
+
+
+    // Inside the login method of your Actions class
+    function login()
+    {
         extract($_POST);
-        $sql = "SELECT * FROM users where username = '{$username}' and `password` = '".md5($password)."' ";
-        @$qry = $this->conn->query($sql)->fetch_array();
-        if(!$qry){
+        $sql = "SELECT * FROM users WHERE username = '{$username}' AND `password` = '" . md5($password) . "' ";
+        $qry = $this->conn->query($sql)->fetch_array();
+        if (!$qry) {
             $resp['status'] = "failed";
             $resp['msg'] = "Invalid username or password.";
-        }else{
-            $resp['status'] = "success";
-            $resp['msg'] = "Login successfully.";
-            foreach($qry as $k => $v){
-                if(!is_numeric($k))
-                $_SESSION[$k] = $v;
+        } else {
+            // Check the user's access level
+            $access_level = $qry['access_level'];
+            if ($access_level == 'Administrator' || $access_level == 'Engineer' || $access_level == 'Operator') {
+                $resp['status'] = "success";
+                $resp['msg'] = "Login successfully.";
+                // Store user information in session
+                foreach ($qry as $k => $v) {
+                    if (!is_numeric($k))
+                        $_SESSION[$k] = $v;
+                }
+                $log['user_id'] = $qry['id'];
+                $log['action_made'] = "Logged in the system.";
+                // audit log
+                $this->save_log($log);
+            } else {
+                $resp['status'] = "failed";
+                $resp['msg'] = "Access denied. You don't have permission to access this system.";
             }
-            $log['user_id'] = $qry['id'];
-            $log['action_made'] = "Logged in the system.";
-            // audit log
-            $this->save_log($log);
         }
         return json_encode($resp);
     }
-    function logout(){
+
+
+    function logout()
+    {
         $log['user_id'] = $_SESSION['id'];
         $log['action_made'] = "Logged out.";
         session_destroy();
@@ -53,46 +72,49 @@ Class Actions extends DBConnection{
         $this->save_log($log);
         header("location:./");
     }
-    function save_member(){
+    function save_member()
+    {
         extract($_POST);
         $data = "";
-        foreach($_POST as $k => $v){
-            if(!in_array($k,array('id'))){
-                if(!empty($data)) $data .=", ";
+        foreach ($_POST as $k => $v) {
+            if (!in_array($k, array('id'))) {
+                if (!empty ($data))
+                    $data .= ", ";
                 $data .= " `{$k}` = '{$v}' ";
             }
         }
-        if(empty($id)){
+        if (empty ($id)) {
             $sql = "INSERT INTO `members` set {$data}";
-        }else{
+        } else {
             $sql = "UPDATE `members` set {$data} where id = '{$id}'";
         }
         $save = $this->conn->query($sql);
-        if($save){
+        if ($save) {
             $resp['status'] = 'success';
             $log['user_id'] = $_SESSION['id'];
-            $member_id = empty($id) ? $this->conn->insert_id : $id ;
-            if(empty($id)){
+            $member_id = empty ($id) ? $this->conn->insert_id : $id;
+            if (empty ($id)) {
                 $resp['msg'] = "New Member successfully added.";
                 $log['action_made'] = " added [id={$member_id}] {$firstname} {$lastname} into the member list.";
-            }else{
+            } else {
                 $resp['msg'] = "Member successfully updated.";
                 $log['action_made'] = " updated the details of [id={$member_id}] member.";
             }
             // audit log
             $this->save_log($log);
-        }else{
+        } else {
             $resp['status'] = 'failed';
-            $resp['msg'] = "Error saving member details. Error: ".$this->conn->error;
+            $resp['msg'] = "Error saving member details. Error: " . $this->conn->error;
             $resp['sql'] = $sql;
         }
         return json_encode($resp);
     }
-    function delete_member(){
+    function delete_member()
+    {
         extract($_POST);
         $mem = $this->conn->query("SELECT * FROM members where id = '{$id}'")->fetch_array();
         $delete = $this->conn->query("DELETE FROM members where id = '{$id}'");
-        if($delete){
+        if ($delete) {
             $resp['status'] = 'success';
             $resp['msg'] = 'Member successfully deleted.';
             $log['user_id'] = $_SESSION['id'];
@@ -102,36 +124,36 @@ Class Actions extends DBConnection{
 
             // audit log
             $this->save_log($log);
-        }else{
-            $resp['status']='failed';
-            $resp['msg']='Failed to delete member.';
-            $resp['error']=$this->conn->error;
+        } else {
+            $resp['status'] = 'failed';
+            $resp['msg'] = 'Failed to delete member.';
+            $resp['error'] = $this->conn->error;
         }
         return json_encode($resp);
     }
 }
-$a = isset($_GET['a']) ?$_GET['a'] : '';
+$a = isset ($_GET['a']) ? $_GET['a'] : '';
 $action = new Actions();
-switch($a){
+switch ($a) {
     case 'login':
         echo $action->login();
-    break;
+        break;
     case 'logout':
         echo $action->logout();
-    break;
+        break;
     case 'save_member':
         echo $action->save_member();
-    break;
+        break;
     case 'delete_member':
         echo $action->delete_member();
-    break;
+        break;
     case 'save_log':
         $log['user_id'] = $_SESSION['id'];
         $log['action_made'] = $_POST['action_made'];
         echo $action->save_log($log);
-    break;
+        break;
     default:
-    // default action here
-    echo "No Action given";
-    break;
+        // default action here
+        echo "No Action given";
+        break;
 }
