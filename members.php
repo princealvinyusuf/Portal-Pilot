@@ -30,10 +30,10 @@ require_once('DBConnection.php');
             <table class="table table-bordered table-striped table-hover">
                 <thead>
                     <tr>
-                        <th class="py-1 px-2">#</th>
+                        <th class="py-1 px-2"></th>
                         <th class="py-1 px-2">First Name</th>
                         <th class="py-1 px-2">Last Name</th>
-                        <th class="py-1 px-2">Contact #</th>
+                        <th class="py-1 px-2">Contact</th>
                         <th class="py-1 px-2">Address</th>
                         <th class="py-1 px-2">Action</th>
                     </tr>
