@@ -57,10 +57,7 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'home';
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                         <li><a class="dropdown-item" href="././Actions.php?a=logout">Logout</a></li>
-                    </ul>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
-                        <li><a class="dropdown-item" href=""> Manage User </a></li>
-                    </ul>    
+                    </ul>   
                 </div>
             <?php endif; ?>
             </div>
