@@ -72,53 +72,60 @@ class Actions extends DBConnection
         $this->save_log($log);
         header("location:./");
     }
-    function save_member()
+    function save_user()
     {
         extract($_POST);
         $data = "";
+        // Exclude 'id' and 'password' from being updated
+        $fields_to_exclude = array('id', 'password');
         foreach ($_POST as $k => $v) {
-            if (!in_array($k, array('id'))) {
+            if (!in_array($k, $fields_to_exclude)) {
                 if (!empty ($data))
                     $data .= ", ";
                 $data .= " `{$k}` = '{$v}' ";
             }
         }
+        // Convert password to MD5 hash
+        $password_hash = md5($password);
         if (empty ($id)) {
-            $sql = "INSERT INTO `members` set {$data}";
+            $sql = "INSERT INTO `users` SET {$data}, `password` = '{$password_hash}'";
         } else {
-            $sql = "UPDATE `members` set {$data} where id = '{$id}'";
+            $sql = "UPDATE `users` SET {$data}, `password` = '{$password_hash}' WHERE id = '{$id}'";
         }
         $save = $this->conn->query($sql);
         if ($save) {
             $resp['status'] = 'success';
             $log['user_id'] = $_SESSION['id'];
-            $member_id = empty ($id) ? $this->conn->insert_id : $id;
+            $user_id = empty ($id) ? $this->conn->insert_id : $id;
             if (empty ($id)) {
-                $resp['msg'] = "New Member successfully added.";
-                $log['action_made'] = " added [id={$member_id}] {$firstname} {$lastname} into the member list.";
+                $resp['msg'] = "New User successfully added.";
+                $log['action_made'] = " added [id={$user_id}] {$name} into the user list.";
             } else {
-                $resp['msg'] = "Member successfully updated.";
-                $log['action_made'] = " updated the details of [id={$member_id}] member.";
+                $resp['msg'] = "User successfully updated.";
+                $log['action_made'] = " updated the details of [id={$user_id}] user.";
             }
+
             // audit log
             $this->save_log($log);
         } else {
             $resp['status'] = 'failed';
-            $resp['msg'] = "Error saving member details. Error: " . $this->conn->error;
+            $resp['msg'] = "Error saving user details. Error: " . $this->conn->error;
             $resp['sql'] = $sql;
         }
         return json_encode($resp);
     }
-    function delete_member()
+
+
+    function delete_user()
     {
         extract($_POST);
-        $mem = $this->conn->query("SELECT * FROM members where id = '{$id}'")->fetch_array();
-        $delete = $this->conn->query("DELETE FROM members where id = '{$id}'");
+        $mem = $this->conn->query("SELECT * FROM users where id = '{$id}'")->fetch_array();
+        $delete = $this->conn->query("DELETE FROM users where id = '{$id}'");
         if ($delete) {
             $resp['status'] = 'success';
-            $resp['msg'] = 'Member successfully deleted.';
+            $resp['msg'] = 'User successfully deleted.';
             $log['user_id'] = $_SESSION['id'];
-            $log['action_made'] = " deleted [id={$mem['id']}] {$mem['firstname']} {$mem['lastname']} from member list.";
+            $log['action_made'] = " deleted [id={$mem['id']}] {$mem['name']} from user list.";
             $_SESSION['flashdata']['type'] = 'success';
             $_SESSION['flashdata']['msg'] = $resp['msg'];
 
@@ -126,7 +133,7 @@ class Actions extends DBConnection
             $this->save_log($log);
         } else {
             $resp['status'] = 'failed';
-            $resp['msg'] = 'Failed to delete member.';
+            $resp['msg'] = 'Failed to delete user.';
             $resp['error'] = $this->conn->error;
         }
         return json_encode($resp);
@@ -141,11 +148,11 @@ switch ($a) {
     case 'logout':
         echo $action->logout();
         break;
-    case 'save_member':
-        echo $action->save_member();
+    case 'save_user':
+        echo $action->save_user();
         break;
-    case 'delete_member':
-        echo $action->delete_member();
+    case 'delete_user':
+        echo $action->delete_user();
         break;
     case 'save_log':
         $log['user_id'] = $_SESSION['id'];

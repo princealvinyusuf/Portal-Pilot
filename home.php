@@ -1,5 +1,5 @@
 <div class="container py-5">
-    <h3><b>Members List</b></h3>
+    <h3><b>Users List</b></h3>
     <div class="card">
         <div class="card-body">
             <div class="col-12 my-2 d-flex justify-content-end">
@@ -9,8 +9,7 @@
                 <thead>
                     <tr>
                         <th class="py-1 px-2"></th>
-                        <th class="py-1 px-2">First Name</th>
-                        <th class="py-1 px-2">Last Name</th>
+                        <th class="py-1 px-2">Name</th>
                         <th class="py-1 px-2">Contact</th>
                         <th class="py-1 px-2">Address</th>
                         <th class="py-1 px-2">Action</th>
@@ -18,14 +17,13 @@
                 </thead>
                 <tbody>
                     <?php 
-                    $qry = $conn->query("SELECT * FROM members order by firstname asc, lastname asc");
+                    $qry = $conn->query("SELECT * FROM users order by name asc");
                     $i = 1;
                     while($row=$qry->fetch_assoc()):
                     ?>
                     <tr>
                         <td class="py-1 px-2"><?php echo $i++ ?></td>
-                        <td class="py-1 px-2"><?php echo $row['firstname'] ?></td>
-                        <td class="py-1 px-2"><?php echo $row['lastname'] ?></td>
+                        <td class="py-1 px-2"><?php echo $row['name'] ?></td>
                         <td class="py-1 px-2"><?php echo $row['contact'] ?></td>
                         <td class="py-1 px-2"><?php echo $row['address'] ?></td>
                         <td class="py-1 px-2 text-center">
@@ -36,7 +34,7 @@
                                 <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
                                 <li><a class="dropdown-item view_data" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>">View</a></li>
                                 <li><a class="dropdown-item edit_data" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>">Edit</a></li>
-                                <li><a class="dropdown-item delete_data" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>" data-name="<?php echo "[id={$row['id']}] ".$row['firstname'].' '.$row['lastname'] ?>">Delete</a></li>
+                                <li><a class="dropdown-item delete_data" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>" data-name="<?php echo "[id={$row['id']}] ".$row['name'] ?>">Delete</a></li>
                                 </ul>
                             </div>
                         </td>
@@ -56,22 +54,22 @@
 <script>
     $(function(){
         $('#add_new').click(function(){
-            uni_modal('New Member',"manage_member.php");
+            uni_modal('New User',"manage_user.php");
         })
         $('.edit_data').click(function(){
-            uni_modal('Edit Member Details',"manage_member.php?id="+$(this).attr('data-id'));
+            uni_modal('Edit User Details',"manage_user.php?id="+$(this).attr('data-id'));
         })
         $('.delete_data').click(function(){
-            _conf("Are you sure to delete <b>"+$(this).attr('data-name')+"</b> from member list?","delete_data",[$(this).attr('data-id')])
+            _conf("Are you sure to delete <b>"+$(this).attr('data-name')+"</b> from user list?","delete_data",[$(this).attr('data-id')])
         })
         $('.view_data').click(function(){
-            uni_modal('View Member Details',"view_member.php?id="+$(this).attr('data-id'));
+            uni_modal('View User Details',"view_user.php?id="+$(this).attr('data-id'));
         })
     })
     function delete_data($id){
         $('#confirm_modal button').attr('disabled',true)
         $.ajax({
-            url:'./Actions.php?a=delete_member',
+            url:'./Actions.php?a=delete_user',
             method:'POST',
             data:{id:$id},
             dataType:'JSON',

@@ -46,7 +46,7 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'home';
                     </li>
                     <?php if($_SESSION['access_level'] == 'Administrator' || $_SESSION['access_level'] == 'Engineer' || $_SESSION['access_level'] == 'Operator'): ?>
                     <li class="nav-item">
-                        <a class="nav-link <?php echo ($page == 'members')? 'active' : '' ?>" aria-current="page" href="./?page=members"><i class="fa fa-users"></i> Members</a>
+                        <a class="nav-link <?php echo ($page == 'users')? 'active' : '' ?>" aria-current="page" href="./?page=users"><i class="fa fa-users"></i> Users</a>
                     </li>
                     <?php endif; ?>
                     <?php if($_SESSION['access_level'] == 'Administrator'): ?>
