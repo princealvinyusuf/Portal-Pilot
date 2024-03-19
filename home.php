@@ -12,6 +12,7 @@
                         <th class="py-1 px-2">Name</th>
                         <th class="py-1 px-2">Contact</th>
                         <th class="py-1 px-2">Address</th>
+                        <th class="py-1 px-2">Role</th>
                         <th class="py-1 px-2">Action</th>
                     </tr>
                 </thead>
@@ -26,6 +27,7 @@
                         <td class="py-1 px-2"><?php echo $row['name'] ?></td>
                         <td class="py-1 px-2"><?php echo $row['contact'] ?></td>
                         <td class="py-1 px-2"><?php echo $row['address'] ?></td>
+                        <td class="py-1 px-2"><?php echo $row['access_level'] ?></td>
                         <td class="py-1 px-2 text-center">
                             <div class="btn-group" role="group">
                                 <button id="btnGroupDrop1" type="button" class="btn btn-primary dropdown-toggle btn-sm rounded-0 py-0" data-bs-toggle='dropdown' aria-expanded="false" >

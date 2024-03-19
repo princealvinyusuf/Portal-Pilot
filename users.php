@@ -34,6 +34,7 @@ require_once('DBConnection.php');
                         <th class="py-1 px-2">Name</th>
                         <th class="py-1 px-2">Contact</th>
                         <th class="py-1 px-2">Address</th>
+                        <th class="py-1 px-2">Role</th>
                         <th class="py-1 px-2">Action</th>
                     </tr>
                 </thead>
@@ -48,6 +49,7 @@ require_once('DBConnection.php');
                         <td class="py-1 px-2"><?php echo $row['name'] ?></td>
                         <td class="py-1 px-2"><?php echo $row['contact'] ?></td>
                         <td class="py-1 px-2"><?php echo $row['address'] ?></td>
+                        <td class="py-1 px-2"><?php echo $row['access_level'] ?></td>
                         <td class="py-1 px-2 text-center">
                             <?php if ($_SESSION['access_level'] == 'Administrator' || $_SESSION['access_level'] == 'Engineer'): ?>
                             <div class="btn-group" role="group">
