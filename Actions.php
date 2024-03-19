@@ -12,15 +12,17 @@ class Actions extends DBConnection
     {
         parent::__destruct();
     }
-    function save_log($data = array())
+
+    function save_log($data = array(), $ip_address = '', $user_agent = '')
     {
-        // Data array paramateres
+        // Data array parameters
         // user_id = user unique id
         // action_made = action made by the user
 
         if (count($data) > 0) {
             extract($data);
-            $sql = "INSERT INTO `logs` (`user_id`,`action_made`) VALUES ('{$user_id}','{$action_made}')";
+            $sql = "INSERT INTO `logs` (`user_id`, `action_made`, `ip_address`, `user_agent`) 
+                VALUES ('{$user_id}', '{$action_made}', '{$ip_address}', '{$user_agent}')";
             $save = $this->conn->query($sql);
             if (!$save) {
                 die ($sql . " <br> ERROR:" . $this->conn->error);
@@ -28,6 +30,7 @@ class Actions extends DBConnection
         }
         return true;
     }
+
 
 
     // Inside the login method of your Actions class
@@ -52,8 +55,11 @@ class Actions extends DBConnection
                 }
                 $log['user_id'] = $qry['id'];
                 $log['action_made'] = "Logged in the system.";
+                $ip_address = $_SERVER['REMOTE_ADDR'];
+                $user_agent = $_SERVER['HTTP_USER_AGENT'];
+                
                 // audit log
-                $this->save_log($log);
+                $this->save_log($log, $ip_address, $user_agent);
             } else {
                 $resp['status'] = "failed";
                 $resp['msg'] = "Access denied. You don't have permission to access this system.";
@@ -67,9 +73,13 @@ class Actions extends DBConnection
     {
         $log['user_id'] = $_SESSION['id'];
         $log['action_made'] = "Logged out.";
+        $ip_address = $_SERVER['REMOTE_ADDR'];
+        $user_agent = $_SERVER['HTTP_USER_AGENT'];
+
         session_destroy();
+
         // audit log
-        $this->save_log($log);
+        $this->save_log($log, $ip_address, $user_agent);
         header("location:./");
     }
     function save_user()
@@ -100,13 +110,17 @@ class Actions extends DBConnection
             if (empty ($id)) {
                 $resp['msg'] = "New User successfully added.";
                 $log['action_made'] = " added [id={$user_id}] {$name} into the user list.";
+                $ip_address = $_SERVER['REMOTE_ADDR'];
+                $user_agent = $_SERVER['HTTP_USER_AGENT'];
             } else {
                 $resp['msg'] = "User successfully updated.";
                 $log['action_made'] = " updated the details of [id={$user_id}] user.";
+                $ip_address = $_SERVER['REMOTE_ADDR'];
+                $user_agent = $_SERVER['HTTP_USER_AGENT'];
             }
 
             // audit log
-            $this->save_log($log);
+            $this->save_log($log, $ip_address, $user_agent);
         } else {
             $resp['status'] = 'failed';
             $resp['msg'] = "Error saving user details. Error: " . $this->conn->error;
@@ -126,11 +140,13 @@ class Actions extends DBConnection
             $resp['msg'] = 'User successfully deleted.';
             $log['user_id'] = $_SESSION['id'];
             $log['action_made'] = " deleted [id={$mem['id']}] {$mem['name']} from user list.";
+            $ip_address = $_SERVER['REMOTE_ADDR'];
+            $user_agent = $_SERVER['HTTP_USER_AGENT'];
             $_SESSION['flashdata']['type'] = 'success';
             $_SESSION['flashdata']['msg'] = $resp['msg'];
 
             // audit log
-            $this->save_log($log);
+            $this->save_log($log, $ip_address, $user_agent);
         } else {
             $resp['status'] = 'failed';
             $resp['msg'] = 'Failed to delete user.';
@@ -157,7 +173,9 @@ switch ($a) {
     case 'save_log':
         $log['user_id'] = $_SESSION['id'];
         $log['action_made'] = $_POST['action_made'];
-        echo $action->save_log($log);
+        $ip_address = $_SERVER['REMOTE_ADDR'];
+        $user_agent = $_SERVER['HTTP_USER_AGENT'];
+        echo $action->save_log($log, $ip_address, $user_agent);
         break;
     default:
         // default action here

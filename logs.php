@@ -12,6 +12,8 @@
                         <th class="py-1 px-2"></th>
                         <th class="py-1 px-2">Date Time</th>
                         <th class="py-1 px-2">Username</th>
+                        <th class="py-1 px-2">IP Address</th>
+                        <th class="py-1 px-2">User Agent</th>
                         <th class="py-1 px-2">Action Made</th>
                     </tr>
                 </thead>
@@ -25,6 +27,8 @@
                         <td class="py-1 px-2"><?php echo $i++ ?></td>
                         <td class="py-1 px-2"><?php echo date("M d, Y H:i",strtotime($row['date_created'])) ?></td>
                         <td class="py-1 px-2"><?php echo $row['username'] ?></td>
+                        <td class="py-1 px-2"><?php echo $row['ip_address'] ?></td>
+                        <td class="py-1 px-2"><?php echo $row['user_agent'] ?></td>
                         <td class="py-1 px-2"><?php echo $row['action_made'] ?></td>
                     </tr>
                     <?php endwhile; ?>
