@@ -21,7 +21,7 @@ if($qry->num_rows > 0){
         <dd class="fs-5 fw-bold"><?php echo $name ?></dd>
         <dt class="fs-6 text-muted">Username</dt>
         <dd class="fs-5 fw-bold"><?php echo $username ?></dd>
-        <dt class="fs-6 text-muted">Contact #</dt>
+        <dt class="fs-6 text-muted">Contact</dt>
         <dd class="fs-5 fw-bold"><?php echo $contact ?></dd>
         <dt class="fs-6 text-muted">Address</dt>
         <dd class="fs-5 fw-bold"><?php echo $address ?></dd>

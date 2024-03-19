@@ -57,7 +57,7 @@ class Actions extends DBConnection
                 $log['action_made'] = "Logged in the system.";
                 $ip_address = $_SERVER['REMOTE_ADDR'];
                 $user_agent = $_SERVER['HTTP_USER_AGENT'];
-                
+
                 // audit log
                 $this->save_log($log, $ip_address, $user_agent);
             } else {
@@ -82,52 +82,61 @@ class Actions extends DBConnection
         $this->save_log($log, $ip_address, $user_agent);
         header("location:./");
     }
+    
     function save_user()
-    {
-        extract($_POST);
-        $data = "";
-        // Exclude 'id' and 'password' from being updated
-        $fields_to_exclude = array('id', 'password');
-        foreach ($_POST as $k => $v) {
-            if (!in_array($k, $fields_to_exclude)) {
-                if (!empty ($data))
-                    $data .= ", ";
-                $data .= " `{$k}` = '{$v}' ";
-            }
+{
+    extract($_POST);
+    $data = "";
+    // Exclude 'id' and 'password' from being updated
+    $fields_to_exclude = array('id', 'password');
+    foreach ($_POST as $k => $v) {
+        if (!in_array($k, $fields_to_exclude) && !empty($v)) {
+            if (!empty($data))
+                $data .= ", ";
+            $data .= " `{$k}` = '{$v}' ";
         }
+    }
+    
+    // Check if password is provided
+    $password_hash = '';
+    if (!empty($password)) {
         // Convert password to MD5 hash
         $password_hash = md5($password);
-        if (empty ($id)) {
-            $sql = "INSERT INTO `users` SET {$data}, `password` = '{$password_hash}'";
-        } else {
-            $sql = "UPDATE `users` SET {$data}, `password` = '{$password_hash}' WHERE id = '{$id}'";
-        }
-        $save = $this->conn->query($sql);
-        if ($save) {
-            $resp['status'] = 'success';
-            $log['user_id'] = $_SESSION['id'];
-            $user_id = empty ($id) ? $this->conn->insert_id : $id;
-            if (empty ($id)) {
-                $resp['msg'] = "New User successfully added.";
-                $log['action_made'] = " added [id={$user_id}] {$name} into the user list.";
-                $ip_address = $_SERVER['REMOTE_ADDR'];
-                $user_agent = $_SERVER['HTTP_USER_AGENT'];
-            } else {
-                $resp['msg'] = "User successfully updated.";
-                $log['action_made'] = " updated the details of [id={$user_id}] user.";
-                $ip_address = $_SERVER['REMOTE_ADDR'];
-                $user_agent = $_SERVER['HTTP_USER_AGENT'];
-            }
-
-            // audit log
-            $this->save_log($log, $ip_address, $user_agent);
-        } else {
-            $resp['status'] = 'failed';
-            $resp['msg'] = "Error saving user details. Error: " . $this->conn->error;
-            $resp['sql'] = $sql;
-        }
-        return json_encode($resp);
+        $data .= ", `password` = '{$password_hash}' ";
     }
+    
+    if (empty($id)) {
+        $sql = "INSERT INTO `users` SET {$data}";
+    } else {
+        $sql = "UPDATE `users` SET {$data} WHERE id = '{$id}'";
+    }
+    
+    $save = $this->conn->query($sql);
+    if ($save) {
+        $resp['status'] = 'success';
+        $log['user_id'] = $_SESSION['id'];
+        $user_id = empty($id) ? $this->conn->insert_id : $id;
+        if (empty($id)) {
+            $resp['msg'] = "New User successfully added.";
+            $log['action_made'] = " added [id={$user_id}] {$name} into the user list.";
+        } else {
+            $resp['msg'] = "User successfully updated.";
+            $log['action_made'] = " updated the details of [id={$user_id}] user.";
+        }
+
+        // Get IP address and user agent
+        $ip_address = $_SERVER['REMOTE_ADDR'];
+        $user_agent = $_SERVER['HTTP_USER_AGENT'];
+
+        // Audit log with IP address and user agent
+        $this->save_log($log, $ip_address, $user_agent);
+    } else {
+        $resp['status'] = 'failed';
+        $resp['msg'] = "Error saving user details. Error: " . $this->conn->error;
+        $resp['sql'] = $sql;
+    }
+    return json_encode($resp);
+}
 
 
     function delete_user()
