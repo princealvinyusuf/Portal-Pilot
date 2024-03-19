@@ -48,9 +48,20 @@ $page = isset ($_GET['page']) ? $_GET['page'] : 'home';
                             <a class="nav-link <?php echo ($page == 'home') ? 'active' : '' ?>" aria-current="page"
                                 href="./"><i class="fa fa-home"></i> Home</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link <?php echo ($page == 'patching') ? 'active' : '' ?>" aria-current="page"
-                                href="./?page=patching"><i class="fas fa-cogs"></i> Patching</a>
+                        <li class="nav-item dropdown"> <!-- Add 'dropdown' class here -->
+                            <a class="nav-link dropdown-toggle <?php echo ($page == 'patching') ? 'active' : '' ?>"
+                                href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                                <i class="fas fa-cogs"></i> Patching
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown"> <!-- Dropdown menu -->
+                                <li><a class="dropdown-item" href="./?page=patching">Deaktivate SMS Notification</a></li>
+                                <li><a class="dropdown-item" href="#">Submenu Item 2</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item" href="#">Submenu Item 3</a></li>
+                            </ul>
                         </li>
 
                         <li class="nav-item">
