@@ -201,9 +201,45 @@ class Actions extends DBConnection
         return json_encode($data);
     }
 
+    function update_last_active($user_id)
+    {
+        $stmt = $this->conn->prepare('UPDATE users SET last_active = NOW() WHERE id = ?');
+        $stmt->bind_param('i', $user_id);
+        $stmt->execute();
+    }
+
+    function count_active_users()
+{
+    // Count users whose last_active time is within the last 15 minutes
+    $count_query = "SELECT COUNT(*) FROM users WHERE last_active >= NOW() - INTERVAL 15 MINUTE";
+    $result = $this->conn->query($count_query);
+    if ($result) {
+        $count = $result->fetch_row()[0];
+        return $count;
+    } else {
+        return 0; // Return 0 if there's an error in the query
+    }
 }
+
+function count_registered_users()
+{
+    $count_query = "SELECT COUNT(*) FROM users";
+    $result = $this->conn->query($count_query);
+    if ($result) {
+        $count = $result->fetch_row()[0];
+        return $count;
+    } else {
+        return 0; // Return 0 if there's an error in the query
+    }
+}
+
+}
+
+
+
 $a = isset ($_GET['a']) ? $_GET['a'] : '';
 $action = new Actions();
+
 switch ($a) {
     case 'login':
         echo $action->login();
@@ -227,7 +263,15 @@ switch ($a) {
     case 'filter_logs':
         echo $action->filter_logs();
         break;
-
+    case 'update_last_active':
+        echo $action->update_last_active($_SESSION['id']);
+        break;
+    case 'count_active_users':
+        echo $action->count_active_users();
+        break;   
+    case 'count_registered_users':
+        echo $action->count_registered_users();
+        break;     
     default:
         // default action here
         echo "No Action given";
