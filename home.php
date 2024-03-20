@@ -1,28 +1,7 @@
 
-<?php
-require_once('Actions.php');
-
-$actions = new Actions();
-$totalUsersOnline = $actions->getTotalUsersOnline();
-?>
-
-
-<!-- Summary Information  -->
-<div class="container">
-    <h5 class="col-auto flex-grow-1"><b>User Information</b></h5>
-
-    <!-- Display total users online -->
-    <div class="row">
-        <div class="col-md-12">
-            <p>Total Users Online: <?php echo $totalUsersOnline; ?></p>
-        </div>
-    </div>
-    
-    
-</div>
-<br>
-
 <!-- Container Patching  -->
+<br>
+<br>
 <div class="container">
 
 <h5 class="col-auto flex-grow-1"><b>Patching</b></h5>
@@ -90,7 +69,7 @@ $totalUsersOnline = $actions->getTotalUsersOnline();
 
 <h5 class="col-auto flex-grow-1"><b>Query</b></h5>
     
-<div class="row">
+    <div class="row">
     <div class="col-md-12">
         <div class="card mb-12">
             <div class="card-body d-flex justify-content-between">
