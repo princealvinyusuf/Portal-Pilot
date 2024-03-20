@@ -1,5 +1,5 @@
 <?php
-session_start();
+// session_start();
 require_once ('DBConnection.php');
 
 class Actions extends DBConnection
@@ -11,6 +11,19 @@ class Actions extends DBConnection
     function __destruct()
     {
         parent::__destruct();
+    }
+
+    // Function to count the number of users online
+    function countUsersOnline()
+    {
+        $active_sessions = 0;
+        foreach ($_SESSION as $key => $value) {
+            // Check if the session key starts with 'user_' indicating an active user session
+            if (strpos($key, 'user_') === 0) {
+                $active_sessions++;
+            }
+        }
+        return $active_sessions;
     }
 
     function save_log($data = array(), $ip_address = '', $user_agent = '')
@@ -53,6 +66,7 @@ class Actions extends DBConnection
                     if (!is_numeric($k))
                         $_SESSION[$k] = $v;
                 }
+                $_SESSION['user_' . $qry['id']] = true;
                 $log['user_id'] = $qry['id'];
                 $log['action_made'] = "Logged in the system.";
                 $ip_address = $_SERVER['REMOTE_ADDR'];
@@ -76,11 +90,19 @@ class Actions extends DBConnection
         $ip_address = $_SERVER['REMOTE_ADDR'];
         $user_agent = $_SERVER['HTTP_USER_AGENT'];
 
+        // Remove session variable indicating user is online
+        unset($_SESSION['user_' . $_SESSION['id']]);
+
         session_destroy();
 
         // audit log
         $this->save_log($log, $ip_address, $user_agent);
         header("location:./");
+    }
+
+    function getTotalUsersOnline()
+    {
+        return $this->countUsersOnline();
     }
     
     function save_user()
@@ -188,6 +210,6 @@ switch ($a) {
         break;
     default:
         // default action here
-        echo "No Action given";
+        echo "";
         break;
 }
