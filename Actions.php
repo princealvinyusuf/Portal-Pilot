@@ -82,61 +82,61 @@ class Actions extends DBConnection
         $this->save_log($log, $ip_address, $user_agent);
         header("location:./");
     }
-    
+
     function save_user()
-{
-    extract($_POST);
-    $data = "";
-    // Exclude 'id' and 'password' from being updated
-    $fields_to_exclude = array('id', 'password');
-    foreach ($_POST as $k => $v) {
-        if (!in_array($k, $fields_to_exclude) && !empty($v)) {
-            if (!empty($data))
-                $data .= ", ";
-            $data .= " `{$k}` = '{$v}' ";
+    {
+        extract($_POST);
+        $data = "";
+        // Exclude 'id' and 'password' from being updated
+        $fields_to_exclude = array('id', 'password');
+        foreach ($_POST as $k => $v) {
+            if (!in_array($k, $fields_to_exclude) && !empty ($v)) {
+                if (!empty ($data))
+                    $data .= ", ";
+                $data .= " `{$k}` = '{$v}' ";
+            }
         }
-    }
-    
-    // Check if password is provided
-    $password_hash = '';
-    if (!empty($password)) {
-        // Convert password to MD5 hash
-        $password_hash = md5($password);
-        $data .= ", `password` = '{$password_hash}' ";
-    }
-    
-    if (empty($id)) {
-        $sql = "INSERT INTO `users` SET {$data}";
-    } else {
-        $sql = "UPDATE `users` SET {$data} WHERE id = '{$id}'";
-    }
-    
-    $save = $this->conn->query($sql);
-    if ($save) {
-        $resp['status'] = 'success';
-        $log['user_id'] = $_SESSION['id'];
-        $user_id = empty($id) ? $this->conn->insert_id : $id;
-        if (empty($id)) {
-            $resp['msg'] = "New User successfully added.";
-            $log['action_made'] = " added [id={$user_id}] {$name} into the user list.";
+
+        // Check if password is provided
+        $password_hash = '';
+        if (!empty ($password)) {
+            // Convert password to MD5 hash
+            $password_hash = md5($password);
+            $data .= ", `password` = '{$password_hash}' ";
+        }
+
+        if (empty ($id)) {
+            $sql = "INSERT INTO `users` SET {$data}";
         } else {
-            $resp['msg'] = "User successfully updated.";
-            $log['action_made'] = " updated the details of [id={$user_id}] user.";
+            $sql = "UPDATE `users` SET {$data} WHERE id = '{$id}'";
         }
 
-        // Get IP address and user agent
-        $ip_address = $_SERVER['REMOTE_ADDR'];
-        $user_agent = $_SERVER['HTTP_USER_AGENT'];
+        $save = $this->conn->query($sql);
+        if ($save) {
+            $resp['status'] = 'success';
+            $log['user_id'] = $_SESSION['id'];
+            $user_id = empty ($id) ? $this->conn->insert_id : $id;
+            if (empty ($id)) {
+                $resp['msg'] = "New User successfully added.";
+                $log['action_made'] = " added [id={$user_id}] {$name} into the user list.";
+            } else {
+                $resp['msg'] = "User successfully updated.";
+                $log['action_made'] = " updated the details of [id={$user_id}] user.";
+            }
 
-        // Audit log with IP address and user agent
-        $this->save_log($log, $ip_address, $user_agent);
-    } else {
-        $resp['status'] = 'failed';
-        $resp['msg'] = "Error saving user details. Error: " . $this->conn->error;
-        $resp['sql'] = $sql;
+            // Get IP address and user agent
+            $ip_address = $_SERVER['REMOTE_ADDR'];
+            $user_agent = $_SERVER['HTTP_USER_AGENT'];
+
+            // Audit log with IP address and user agent
+            $this->save_log($log, $ip_address, $user_agent);
+        } else {
+            $resp['status'] = 'failed';
+            $resp['msg'] = "Error saving user details. Error: " . $this->conn->error;
+            $resp['sql'] = $sql;
+        }
+        return json_encode($resp);
     }
-    return json_encode($resp);
-}
 
 
     function delete_user()
@@ -163,6 +163,44 @@ class Actions extends DBConnection
         }
         return json_encode($resp);
     }
+
+    function filter_logs()
+    {
+        extract($_GET);
+        $where_clause = '';
+
+        // Construct the WHERE clause based on filter parameters
+        if (!empty ($filter_date)) {
+            $where_clause .= "AND DATE(l.date_created) = '{$filter_date}' ";
+        }
+        if (!empty ($filter_username)) {
+            $where_clause .= "AND u.username LIKE '%{$filter_username}%' ";
+        }
+
+        // Execute the filtered query
+        $qry = $this->conn->query("SELECT l.*, u.username 
+                                FROM `logs` l 
+                                INNER JOIN users u ON l.user_id = u.id 
+                                WHERE 1 {$where_clause}
+                                ORDER BY unix_timestamp(l.`date_created`) ASC");
+
+        // Process the query result and return JSON response
+        $data = array();
+        $i = 1;
+        while ($row = $qry->fetch_assoc()) {
+            $data[] = array(
+                'id' => $i++,
+                'date_time' => date("M d, Y H:i", strtotime($row['date_created'])),
+                'username' => $row['username'],
+                'ip_address' => $row['ip_address'],
+                'user_agent' => $row['user_agent'],
+                'action_made' => $row['action_made']
+            );
+        }
+
+        return json_encode($data);
+    }
+
 }
 $a = isset ($_GET['a']) ? $_GET['a'] : '';
 $action = new Actions();
@@ -186,6 +224,10 @@ switch ($a) {
         $user_agent = $_SERVER['HTTP_USER_AGENT'];
         echo $action->save_log($log, $ip_address, $user_agent);
         break;
+    case 'filter_logs':
+        echo $action->filter_logs();
+        break;
+
     default:
         // default action here
         echo "No Action given";
