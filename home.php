@@ -18,8 +18,8 @@
         <div class="col-md-4">
         <div class="card mb-4">
                 <div class="card-body">
-                    <h6 class="card-title">Menu 2</h6>
-                    <button type="button" class="btn btn-primary" onclick="saveLog('User Accesssing Menu: Menu 2')">Access</button>
+                    <h6 class="card-title">Menu Deaktivasi Email Notifikasi</h6>
+                    <button type="button" class="btn btn-primary" onclick="saveLog('User Accesssing Menu: Deaktivasi Email Notifikasi')">Access</button>
                 </div>
             </div>
         </div>
