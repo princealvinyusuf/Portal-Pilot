@@ -209,29 +209,63 @@ class Actions extends DBConnection
     }
 
     function count_active_users()
+    {
+        // Count users whose last_active time is within the last 15 minutes
+        $count_query = "SELECT COUNT(*) FROM users WHERE last_active >= NOW() - INTERVAL 15 MINUTE";
+        $result = $this->conn->query($count_query);
+        if ($result) {
+            $count = $result->fetch_row()[0];
+            return $count;
+        } else {
+            return 0; // Return 0 if there's an error in the query
+        }
+    }
+
+    function count_registered_users()
+    {
+        $count_query = "SELECT COUNT(*) FROM users";
+        $result = $this->conn->query($count_query);
+        if ($result) {
+            $count = $result->fetch_row()[0];
+            return $count;
+        } else {
+            return 0; // Return 0 if there's an error in the query
+        }
+    }
+
+    function search_sms_notification($phone, $account, $email)
 {
-    // Count users whose last_active time is within the last 15 minutes
-    $count_query = "SELECT COUNT(*) FROM users WHERE last_active >= NOW() - INTERVAL 15 MINUTE";
-    $result = $this->conn->query($count_query);
+    // Construct SQL query based on search parameters
+    $whereClause = '';
+    $conditions = [];
+    if (!empty($phone)) {
+        $conditions[] = "phone_number LIKE '%$phone%'";
+    }
+    if (!empty($account)) {
+        $conditions[] = "account_number LIKE '%$account%'";
+    }
+    if (!empty($email)) {
+        $conditions[] = "email LIKE '%$email%'";
+    }
+    if (!empty($conditions)) {
+        $whereClause = 'WHERE ' . implode(' AND ', $conditions);
+    }
+
+    $sql = "SELECT * FROM customers $whereClause ORDER BY registration_date ASC";
+
+    // Execute the query
+    $result = $this->conn->query($sql);
     if ($result) {
-        $count = $result->fetch_row()[0];
-        return $count;
+        $data = [];
+        while ($row = $result->fetch_assoc()) {
+            $data[] = $row;
+        }
+        return json_encode(['status' => 'success', 'data' => $data]);
     } else {
-        return 0; // Return 0 if there's an error in the query
+        return json_encode(['status' => 'failed', 'message' => 'Failed to retrieve SMS notification data.']);
     }
 }
 
-function count_registered_users()
-{
-    $count_query = "SELECT COUNT(*) FROM users";
-    $result = $this->conn->query($count_query);
-    if ($result) {
-        $count = $result->fetch_row()[0];
-        return $count;
-    } else {
-        return 0; // Return 0 if there's an error in the query
-    }
-}
 
 }
 
@@ -268,10 +302,26 @@ switch ($a) {
         break;
     case 'count_active_users':
         echo $action->count_active_users();
-        break;   
+        break;
     case 'count_registered_users':
         echo $action->count_registered_users();
-        break;     
+        break;
+    case 'search_sms_notification':
+        // Assuming you have a method in your Actions class to handle the search
+        if (isset ($_GET['phone']) || isset ($_GET['account']) || isset ($_GET['email'])) {
+            // Extract search parameters
+            $phone = isset ($_GET['phone']) ? $_GET['phone'] : '';
+            $account = isset ($_GET['account']) ? $_GET['account'] : '';
+            $email = isset ($_GET['email']) ? $_GET['email'] : '';
+
+            // Call the method to search SMS notification data
+            echo $action->search_sms_notification($phone, $account, $email);
+        } else {
+            // If search parameters are not provided, return an error message
+            echo json_encode(['status' => 'failed', 'message' => 'Search parameters are missing.']);
+        }
+        break;
+
     default:
         // default action here
         echo "No Action given";

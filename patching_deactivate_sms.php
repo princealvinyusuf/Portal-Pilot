@@ -1,5 +1,5 @@
 <div class="container py-5">
-    <div class="d-flex w-100">
+<div class="d-flex w-100">
         <h3 class="col-auto flex-grow-1"><b>Patching - Menu Deaktivasi SMS Notifikasi</b></h3>
     </div>
     <hr>
@@ -29,8 +29,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="text-md-end">
-                        <button type="button" class="btn btn-primary"
-                            onclick="saveLog('User Searching: SMS Notification Data: ' + document.getElementById('phone').value + ' ' + document.getElementById('account').value + ' ' + document.getElementById('email').value)">Access</button>
+                    <button type="button" class="btn btn-primary" onclick="searchAndSave()">Access</button>
                     </div>
                 </div>
             </div>
@@ -39,76 +38,10 @@
 
     <br>
     <div class="card">
-
         <div class="card-body">
             <h4 class="mb-4"><strong>Result of SMS Notification Data</strong></h4>
-            <table class="table table-bordered table-striped table-hover">
-                <thead>
-                    <tr>
-                        <th class="py-1 px-2"></th>
-                        <th class="py-1 px-2">Registration Date</th>
-                        <th class="py-1 px-2">Username</th>
-                        <th class="py-1 px-2">Account Number</th>
-                        <th class="py-1 px-2">Email</th>
-                        <th class="py-1 px-2">Phone Number</th>
-                        <th class="py-1 px-2">Username Update</th>
-                        <th class="py-1 px-2">SMS Status</th>
-                        <th class="py-1 px-2">Email Status</th>
-                        <th class="py-1 px-2">Whatsapp Status</th>
-                        <th class="py-1 px-2">Channel</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                    $qry = $conn->query("SELECT * FROM customers ORDER BY registration_date ASC");
-                    $i = 1;
-                    while ($row = $qry->fetch_assoc()):
-                        ?>
-                        <tr>
-                            <td class="py-1 px-2">
-                                <?php echo $i++ ?>
-                            </td>
-                            <td class="py-1 px-2">
-                                <?php echo date("M d, Y", strtotime($row['registration_date'])) ?>
-                            </td>
-                            <td class="py-1 px-2">
-                                <?php echo $row['username'] ?>
-                            </td>
-                            <td class="py-1 px-2">
-                                <?php echo $row['account_number'] ?>
-                            </td>
-                            <td class="py-1 px-2">
-                                <?php echo $row['email'] ?>
-                            </td>
-                            <td class="py-1 px-2">
-                                <?php echo $row['phone_number'] ?>
-                            </td>
-                            <td class="py-1 px-2">
-                                <?php echo $row['username_update'] ?>
-                            </td>
-                            <td class="py-1 px-2">
-                                <?php echo $row['sms_status'] ?>
-                            </td>
-                            <td class="py-1 px-2">
-                                <?php echo $row['email_status'] ?>
-                            </td>
-                            <td class="py-1 px-2">
-                                <?php echo $row['whatsapp_status'] ?>
-                            </td>
-                            <td class="py-1 px-2">
-                                <?php echo $row['channel'] ?>
-                            </td>
-                        </tr>
-                    <?php endwhile; ?>
-                    <?php if ($qry->num_rows <= 0): ?>
-                        <tr>
-                            <th class="text-center" colspan="9">No data to display.</th>
-                        </tr>
-                    <?php endif; ?>
-                </tbody>
-            </table>
+            <div id="smsNotificationResult"></div>
         </div>
-
     </div>
 
     <br>
@@ -163,5 +96,58 @@
         };
         xhr.send("a=save_log&user_id=<?php echo $_SESSION['id']; ?>&action_made=" + queryAction);
 
+    }
+
+    function searchSMSNotification() {
+            // Get search parameters
+            var phone = document.getElementById('phone').value;
+            var account = document.getElementById('account').value;
+            var email = document.getElementById('email').value;
+
+            // AJAX request to search SMS notification data
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "./Actions.php?a=search_sms_notification&phone=" + phone + "&account=" + account + "&email=" + email, true);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var response = JSON.parse(xhr.responseText);
+                    if (response.status === 'success') {
+                        displaySMSNotificationResult(response.data);
+                    } else {
+                        alert("Failed to retrieve SMS notification data.");
+                    }
+                }
+            };
+            xhr.send();
+        }
+
+        function displaySMSNotificationResult(data) {
+            var tableHtml = '<table class="table table-bordered table-striped table-hover">';
+            tableHtml += '<thead><tr><th>Registration Date</th><th>Username</th><th>Account Number</th><th>Email</th><th>Phone Number</th><th>Username Update</th><th>SMS Status</th><th>Email Status</th><th>Whatsapp Status</th><th>Channel</th></tr></thead>';
+            tableHtml += '<tbody>';
+            data.forEach(function (row) {
+                tableHtml += '<tr>';
+                tableHtml += '<td>' + row.registration_date + '</td>';
+                tableHtml += '<td>' + row.username + '</td>';
+                tableHtml += '<td>' + row.account_number + '</td>';
+                tableHtml += '<td>' + row.email + '</td>';
+                tableHtml += '<td>' + row.phone_number + '</td>';
+                tableHtml += '<td>' + row.username_update + '</td>';
+                tableHtml += '<td>' + row.sms_status + '</td>';
+                tableHtml += '<td>' + row.email_status + '</td>';
+                tableHtml += '<td>' + row.whatsapp_status + '</td>';
+                tableHtml += '<td>' + row.channel + '</td>';
+                tableHtml += '</tr>';
+            });
+            tableHtml += '</tbody></table>';
+
+            document.getElementById('smsNotificationResult').innerHTML = tableHtml;
+        }
+
+        function searchAndSave() {
+        // Call saveLog function
+        saveLog('User Searching: SMS Notification Data: ' + document.getElementById('phone').value + ' ' + document.getElementById('account').value + ' ' + document.getElementById('email').value);
+        
+        // Call searchSMSNotification function
+        searchSMSNotification();
     }
 </script>
