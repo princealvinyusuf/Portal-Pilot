@@ -55,8 +55,8 @@ $page = isset ($_GET['page']) ? $_GET['page'] : 'home';
                                 <i class="fas fa-cogs"></i> Patching
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown"> <!-- Dropdown menu -->
-                                <li><a class="dropdown-item" href="./?page=patching_deactivate_sms">Deaktivate SMS Notification</a></li>
-                                <li><a class="dropdown-item" href="./?page=patching_deactivate_email">Deaktivate Email Notification</a></li>
+                                <li><a class="dropdown-item" href="./?page=patching_deactivate_sms">Deactivate SMS Notification</a></li>
+                                <li><a class="dropdown-item" href="./?page=patching_deactivate_email">Deactivate Email Notification</a></li>
                                 <li>
                                     <hr class="dropdown-divider">
                                 </li>

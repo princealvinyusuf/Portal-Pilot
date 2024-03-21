@@ -72,8 +72,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="text-md-end">
-                <button type="button" class="btn btn-primary"
-                        onclick="saveLog('Patching Action: Deactivate SMS Notification: ' + document.getElementById('username_update').value + ' ' + document.getElementById('phone_act').value + ' ' + document.getElementById('account_act').value)">Patching SMS Notification</button>
+            <button type="button" class="btn btn-primary" onclick="updateStatusSMS()">Patching SMS Notification</button>
             </div>
         </div>
     </div>
@@ -142,6 +141,31 @@
 
             document.getElementById('smsNotificationResult').innerHTML = tableHtml;
         }
+
+        function updateStatusSMS() {
+        var usernameUpdate = document.getElementById('username_update').value;
+        var phoneNumber = document.getElementById('phone_act').value;
+        var accountNumber = document.getElementById('account_act').value;
+
+        // AJAX request to update status_sms
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "./Actions.php?a=update_status_sms", true);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                var response = JSON.parse(xhr.responseText);
+                if (response.status === 'success') {
+                    // Handle success
+                    console.log(response.message);
+                } else {
+                    // Handle failure
+                    console.error(response.message);
+                }
+            }
+        };
+        xhr.send("username_update=" + usernameUpdate + "&phone_number=" + phoneNumber + "&rekening=" + accountNumber);
+    }
+        
 
         function searchAndSave() {
         // Call saveLog function
