@@ -268,10 +268,32 @@ class Actions extends DBConnection
 
     function update_status_sms($username_update, $phone_number, $rekening)
     {
+        // Check if username_update is empty
+        if (empty ($username_update)) {
+            // If empty, set it to the username session id
+            $username_update = $_SESSION['username'];
+        }
+
         // Update status_sms to '0' based on phone_number or rekening
-        $sql = "UPDATE data_registration SET status_sms = '0' WHERE phone_number = ? OR rekening = ?";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param('ss', $phone_number, $rekening);
+        $sql = "UPDATE data_registration SET status_sms = '0', username_update = ? WHERE ";
+
+        if (!empty ($phone_number) && !empty ($rekening)) {
+            // Both phone number and account number are provided
+            $sql .= "(phone_number = ? AND rekening = ?)";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bind_param('sss', $username_update, $phone_number, $rekening);
+        } elseif (!empty ($phone_number)) {
+            // Only phone number is provided
+            $sql .= "phone_number = ?";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bind_param('ss', $username_update, $phone_number);
+        } elseif (!empty ($rekening)) {
+            // Only account number is provided
+            $sql .= "rekening = ?";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bind_param('ss', $username_update, $rekening);
+        }
+
         $result = $stmt->execute();
 
         if ($result) {
@@ -280,6 +302,7 @@ class Actions extends DBConnection
             return json_encode(['status' => 'failed', 'message' => 'Failed to update status SMS.']);
         }
     }
+
 
 
 }
