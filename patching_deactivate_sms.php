@@ -122,19 +122,19 @@
 
         function displaySMSNotificationResult(data) {
             var tableHtml = '<table class="table table-bordered table-striped table-hover">';
-            tableHtml += '<thead><tr><th>Registration Date</th><th>Username</th><th>Account Number</th><th>Email</th><th>Phone Number</th><th>Username Update</th><th>SMS Status</th><th>Email Status</th><th>Whatsapp Status</th><th>Channel</th></tr></thead>';
+            tableHtml += '<thead><tr><th>Registration Date</th><th>Username Registration</th><th>Account Number</th><th>Email</th><th>Phone Number</th><th>Username Update</th><th>SMS Status</th><th>Email Status</th><th>WA Status</th><th>Channel</th></tr></thead>';
             tableHtml += '<tbody>';
             data.forEach(function (row) {
                 tableHtml += '<tr>';
-                tableHtml += '<td>' + row.registration_date + '</td>';
-                tableHtml += '<td>' + row.username + '</td>';
-                tableHtml += '<td>' + row.account_number + '</td>';
+                tableHtml += '<td>' + row.date_reg + '</td>';
+                tableHtml += '<td>' + row.username_reg + '</td>';
+                tableHtml += '<td>' + row.rekening + '</td>';
                 tableHtml += '<td>' + row.email + '</td>';
                 tableHtml += '<td>' + row.phone_number + '</td>';
                 tableHtml += '<td>' + row.username_update + '</td>';
-                tableHtml += '<td>' + row.sms_status + '</td>';
-                tableHtml += '<td>' + row.email_status + '</td>';
-                tableHtml += '<td>' + row.whatsapp_status + '</td>';
+                tableHtml += '<td>' + row.status_sms + '</td>';
+                tableHtml += '<td>' + row.status_email + '</td>';
+                tableHtml += '<td>' + row.status_wa + '</td>';
                 tableHtml += '<td>' + row.channel + '</td>';
                 tableHtml += '</tr>';
             });

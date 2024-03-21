@@ -34,7 +34,7 @@
                     <tr>
                         <th class="py-1 px-2"></th>
                         <th class="py-1 px-2">Registration Date</th>
-                        <th class="py-1 px-2">Username</th>
+                        <th class="py-1 px-2">Username Registration</th>
                         <th class="py-1 px-2">Account Number</th>
                         <th class="py-1 px-2">Email</th>
                         <th class="py-1 px-2">Phone Number</th>
@@ -48,7 +48,7 @@
                 </thead>
                 <tbody>
                     <?php
-                    $qry = $conn->query("SELECT * FROM customers ORDER BY registration_date ASC");
+                    $qry = $conn->query("SELECT * FROM data_registration ORDER BY date_reg ASC");
                     $i = 1;
                     while ($row = $qry->fetch_assoc()):
                         ?>
@@ -57,13 +57,13 @@
                                 <?php echo $i++ ?>
                             </td>
                             <td class="py-1 px-2">
-                                <?php echo date("M d, Y", strtotime($row['registration_date'])) ?>
+                                <?php echo date("M d, Y", strtotime($row['date_reg'])) ?>
                             </td>
                             <td class="py-1 px-2">
-                                <?php echo $row['username'] ?>
+                                <?php echo $row['username_reg'] ?>
                             </td>
                             <td class="py-1 px-2">
-                                <?php echo $row['account_number'] ?>
+                                <?php echo $row['rekening'] ?>
                             </td>
                             <td class="py-1 px-2">
                                 <?php echo $row['email'] ?>
@@ -75,13 +75,13 @@
                                 <?php echo $row['username_update'] ?>
                             </td>
                             <!-- <td class="py-1 px-2">
-                                <?php echo $row['sms_status'] ?>
+                                <?php echo $row['status_sms'] ?>
                             </td> -->
                             <td class="py-1 px-2">
-                                <?php echo $row['email_status'] ?>
+                                <?php echo $row['status_email'] ?>
                             </td>
                             <!-- <td class="py-1 px-2">
-                                <?php echo $row['whatsapp_status'] ?>
+                                <?php echo $row['status_wa'] ?>
                             </td> -->
                             <td class="py-1 px-2">
                                 <?php echo $row['channel'] ?>

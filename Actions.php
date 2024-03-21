@@ -242,7 +242,7 @@ class Actions extends DBConnection
         $conditions[] = "phone_number LIKE '%$phone%'";
     }
     if (!empty($account)) {
-        $conditions[] = "account_number LIKE '%$account%'";
+        $conditions[] = "rekening LIKE '%$account%'";
     }
     if (!empty($email)) {
         $conditions[] = "email LIKE '%$email%'";
@@ -251,7 +251,7 @@ class Actions extends DBConnection
         $whereClause = 'WHERE ' . implode(' AND ', $conditions);
     }
 
-    $sql = "SELECT * FROM customers $whereClause ORDER BY registration_date ASC";
+    $sql = "SELECT * FROM data_registration $whereClause ORDER BY date_reg ASC";
 
     // Execute the query
     $result = $this->conn->query($sql);
