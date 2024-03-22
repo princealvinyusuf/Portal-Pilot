@@ -179,11 +179,11 @@
 
                     // Check if usernameUpdate is empty
                     usernameUpdate = usernameUpdate === '' ? usernameGlobal : usernameUpdate;
-                    
+
                     console.log(usernameUpdate, phoneNumber, rekening);
 
                     // Call the updateStatusSMS function
-                    updateStatusSMS(usernameUpdate, phoneNumber, rekening);
+                    updateStatusSMS(usernameGlobal, phoneNumber, rekening);
                 });
             });
         }
