@@ -85,8 +85,8 @@
     </div>
 
     <script>
-        var username = '<?php echo isset($_SESSION["username"]) ? $_SESSION["username"] : "" ?>';
-        console.log(username);
+        var usernameGlobal = '<?php echo isset($_SESSION["username"]) ? $_SESSION["username"] : "" ?>';
+        console.log(usernameGlobal);
         
         function saveLog(queryAction) {
             // AJAX request to save_log before submitting the form
@@ -178,8 +178,8 @@
                     var rekening = this.getAttribute('data-rekening');
 
                     // Check if usernameUpdate is empty
-                    usernameUpdate = usernameUpdate === '' ? '<?php echo $_SESSION["username"] ?>' : usernameUpdate;
-
+                    usernameUpdate = usernameUpdate === '' ? usernameGlobal : usernameUpdate;
+                    
                     console.log(usernameUpdate, phoneNumber, rekening);
 
                     // Call the updateStatusSMS function
