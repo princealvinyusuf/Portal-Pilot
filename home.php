@@ -24,8 +24,8 @@
             <div class="card mb-4">
                 <div class="card-body">
                     <h6 class="card-title">Menu Deaktivasi SMS Notifikasi</h6>
-                    <button type="button" class="btn btn-primary"
-                        onclick="saveLog('User Accesssing Menu: Deaktivasi SMS Notifikasi')">Access</button>
+                    <button type="button" class="btn btn-primary" onclick="saveLogAndRedirect()">Access</button>
+
                 </div>
             </div>
         </div>
@@ -104,9 +104,17 @@
 </div>
 
 <script>
+    function saveLogAndRedirect() {
+        // Save log
+        saveLog('User Accessing Menu: Deaktivasi SMS Notifikasi');
+        
+        // Redirect to patching_deativate_sms.php
+        window.location.href = './?page=patching_deactivate_sms';
+    }
+
     function saveLog(queryAction) {
-        // AJAX request to save_log before submitting the form
-        var xhr = new XMLHttpRequest();
+         // AJAX request to save_log before submitting the form
+         var xhr = new XMLHttpRequest();
         xhr.open("POST", "./Actions.php?a=save_log", true);
         xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         xhr.onreadystatechange = function () {

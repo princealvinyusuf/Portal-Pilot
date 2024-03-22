@@ -121,7 +121,7 @@
             function updateStatusSMS(usernameUpdate, phoneNumber, rekening) {
                 // AJAX request to update status_sms
                 var xhr = new XMLHttpRequest();
-                xhr.open("POST", "./Actions.php?a=update_status_sms", true);
+                xhr.open("POST", "./Actions.php?a=update_status_email", true);
                 xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
                 xhr.onreadystatechange = function () {
                     if (xhr.readyState === 4 && xhr.status === 200) {
@@ -165,7 +165,7 @@
 
             // AJAX request to update status_sms
             var xhr = new XMLHttpRequest();
-            xhr.open("POST", "./Actions.php?a=update_status_sms", true);
+            xhr.open("POST", "./Actions.php?a=update_status_email", true);
             xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4 && xhr.status === 200) {

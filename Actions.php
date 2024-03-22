@@ -303,6 +303,45 @@ class Actions extends DBConnection
         }
     }
 
+    function update_status_email($username_update, $phone_number, $rekening)
+    {
+        // Check if username_update is empty
+        if (empty ($username_update)) {
+            // If empty, set it to the username session id
+            $username_update = $_SESSION['username'];
+        }
+
+        // Update status_sms to '0' based on phone_number or rekening
+        $sql = "UPDATE data_registration SET status_email = '0', username_update = ? WHERE ";
+
+        if (!empty ($phone_number) && !empty ($rekening)) {
+            // Both phone number and account number are provided
+            $sql .= "(phone_number = ? AND rekening = ?)";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bind_param('sss', $username_update, $phone_number, $rekening);
+        } elseif (!empty ($phone_number)) {
+            // Only phone number is provided
+            $sql .= "phone_number = ?";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bind_param('ss', $username_update, $phone_number);
+        } elseif (!empty ($rekening)) {
+            // Only account number is provided
+            $sql .= "rekening = ?";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bind_param('ss', $username_update, $rekening);
+        }
+
+        $result = $stmt->execute();
+
+        if ($result) {
+            return json_encode(['status' => 'success', 'message' => 'Status Email updated successfully.']);
+        } else {
+            return json_encode(['status' => 'failed', 'message' => 'Failed to update status Email.']);
+        }
+    }
+
+
+
 
 
 }
@@ -361,7 +400,7 @@ switch ($a) {
         break;
 
     case 'update_status_sms':
-        if(isset($_POST['username_update'], $_POST['phone_number'], $_POST['rekening'])) {
+        if (isset ($_POST['username_update'], $_POST['phone_number'], $_POST['rekening'])) {
             $username_update = $_POST['username_update'];
             $phone_number = $_POST['phone_number'];
             $rekening = $_POST['rekening'];
@@ -370,7 +409,16 @@ switch ($a) {
             echo json_encode(['status' => 'failed', 'message' => 'Missing parameters']);
         }
         break;
-    
+    case 'update_status_email':
+        if (isset ($_POST['username_update'], $_POST['phone_number'], $_POST['rekening'])) {
+            $username_update = $_POST['username_update'];
+            $phone_number = $_POST['phone_number'];
+            $rekening = $_POST['rekening'];
+            echo $action->update_status_email($username_update, $phone_number, $rekening);
+        } else {
+            echo json_encode(['status' => 'failed', 'message' => 'Missing parameters']);
+        }
+        break;
     default:
         // default action here
         echo "No Action given";
@@ -392,10 +440,10 @@ switch ($a) {
 
 
 // DONT THROW IT AWAY
-    // case 'update_status_sms':
-    //     // Assuming you pass parameters through POST method
-    //     $username_update = $_POST['username_update'];
-    //     $phone_number = $_POST['phone_number'];
-    //     $rekening = $_POST['rekening'];
-    //     echo $action->update_status_sms($username_update, $phone_number, $rekening);
-    //     break;
+// case 'update_status_sms':
+//     // Assuming you pass parameters through POST method
+//     $username_update = $_POST['username_update'];
+//     $phone_number = $_POST['phone_number'];
+//     $rekening = $_POST['rekening'];
+//     echo $action->update_status_sms($username_update, $phone_number, $rekening);
+//     break;
