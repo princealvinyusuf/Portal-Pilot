@@ -85,6 +85,9 @@
     </div>
 
     <script>
+        var username = '<?php echo isset($_SESSION["username"]) ? $_SESSION["username"] : "" ?>';
+        console.log(username);
+        
         function saveLog(queryAction) {
             // AJAX request to save_log before submitting the form
             var xhr = new XMLHttpRequest();
