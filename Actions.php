@@ -359,16 +359,29 @@ switch ($a) {
             echo json_encode(['status' => 'failed', 'message' => 'Search parameters are missing.']);
         }
         break;
-    case 'update_status_sms':
-        // Assuming you pass parameters through POST method
-        $username_update = $_POST['username_update'];
-        $phone_number = $_POST['phone_number'];
-        $rekening = $_POST['rekening'];
-        echo $action->update_status_sms($username_update, $phone_number, $rekening);
-        break;
 
+    case 'update_status_sms':
+        if(isset($_POST['username_update'], $_POST['phone_number'], $_POST['rekening'])) {
+            $username_update = $_POST['username_update'];
+            $phone_number = $_POST['phone_number'];
+            $rekening = $_POST['rekening'];
+            echo $action->update_status_sms($username_update, $phone_number, $rekening);
+        } else {
+            echo json_encode(['status' => 'failed', 'message' => 'Missing parameters']);
+        }
+        break;
+    
     default:
         // default action here
         echo "No Action given";
         break;
 }
+
+// DONT THROW IT AWAY
+    // case 'update_status_sms':
+    //     // Assuming you pass parameters through POST method
+    //     $username_update = $_POST['username_update'];
+    //     $phone_number = $_POST['phone_number'];
+    //     $rekening = $_POST['rekening'];
+    //     echo $action->update_status_sms($username_update, $phone_number, $rekening);
+    //     break;
