@@ -4,8 +4,10 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        background-color: #ff8000; /* Blue color */
-        color: #fff; /* Black text color */
+        background-color: #ff8000;
+        /* Blue color */
+        color: #fff;
+        /* Black text color */
         padding: 20px;
         border-radius: 10px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
@@ -107,8 +109,6 @@
 
 
     <script>
-        var usernameGlobal = '<?php echo isset ($_SESSION["username"]) ? $_SESSION["username"] : "" ?>';
-        console.log(usernameGlobal);
 
         function saveLog(queryAction) {
             // AJAX request to save_log before submitting the form
@@ -149,6 +149,10 @@
                 alert('Please fill the phone number field with only numbers.');
                 return;
             }
+            if (phone.substring(0, 2) !== '08') {
+                alert('The phone number entered is incorrect.');
+                return;
+            }
             if (!accountRegex.test(account)) {
                 alert('Please fill the account number field with only numbers.');
                 return;
@@ -157,6 +161,7 @@
             // Perform your action here, for example, call the updateStatusSMS() function
             updateStatusSMS();
         }
+
 
         function searchSMSNotification() {
             // Get search parameters
@@ -232,13 +237,8 @@
                     var phoneNumber = this.getAttribute('data-phone');
                     var rekening = this.getAttribute('data-rekening');
 
-                    // Check if usernameUpdate is empty
-                    usernameUpdate = usernameUpdate === '' ? usernameGlobal : usernameUpdate;
-
-                    console.log(usernameUpdate, phoneNumber, rekening);
-
                     // Call the updateStatusSMS function
-                    updateStatusSMS(usernameGlobal, phoneNumber, rekening);
+                    updateStatusSMS(usernameUpdate, phoneNumber, rekening);
                 });
             });
         }
