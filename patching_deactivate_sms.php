@@ -1,3 +1,19 @@
+<style>
+    .success-popup {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #ff8000; /* Blue color */
+        color: #fff; /* Black text color */
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        display: none;
+    }
+</style>
+
+
 <div class="container py-5">
     <div class="d-flex w-100">
         <h3 class="col-auto flex-grow-1"><b>Patching - Menu Deaktivasi SMS Notifikasi</b></h3>
@@ -48,6 +64,7 @@
 
     <br>
     <!-- Deactivate SMS Notification -->
+
     <div class="card">
         <div class="container py-5">
             <h4 class="mb-4"><strong>Action - Deactivate SMS Notification</strong></h4>
@@ -74,20 +91,25 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="text-md-end">
-                        <button type="button" class="btn btn-primary" onclick="updateStatusSMS()">Patching SMS
+                        <button type="button" class="btn btn-primary" onclick="validateForm()">Patching SMS
                             Notification</button>
                     </div>
                 </div>
             </div>
         </div>
-
-
     </div>
 
+    <div id="successPopup" class="success-popup">
+        <h4>Patching Complete</h4>
+        <p>The SMS notification has been successfully updated.</p>
+    </div>
+
+
+
     <script>
-        var usernameGlobal = '<?php echo isset($_SESSION["username"]) ? $_SESSION["username"] : "" ?>';
+        var usernameGlobal = '<?php echo isset ($_SESSION["username"]) ? $_SESSION["username"] : "" ?>';
         console.log(usernameGlobal);
-        
+
         function saveLog(queryAction) {
             // AJAX request to save_log before submitting the form
             var xhr = new XMLHttpRequest();
@@ -101,6 +123,39 @@
             };
             xhr.send("a=save_log&user_id=<?php echo $_SESSION['id']; ?>&action_made=" + queryAction);
 
+        }
+
+        function validateForm() {
+            var username = document.getElementById('username_update').value;
+            var phone = document.getElementById('phone_act').value;
+            var account = document.getElementById('account_act').value;
+
+            if (username === '' || phone === '' || account === '') {
+                alert('Please completely fill the form');
+                return;
+            }
+
+            // Regular expressions for validation
+            var usernameRegex = /^[a-zA-Z0-9\s!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~]+$/;
+            var phoneRegex = /^\d+$/;
+            var accountRegex = /^\d+$/;
+
+            // Validation checks
+            if (!usernameRegex.test(username)) {
+                alert('Please fill the username field with letters, numbers, and special characters only.');
+                return;
+            }
+            if (!phoneRegex.test(phone)) {
+                alert('Please fill the phone number field with only numbers.');
+                return;
+            }
+            if (!accountRegex.test(account)) {
+                alert('Please fill the account number field with only numbers.');
+                return;
+            }
+
+            // Perform your action here, for example, call the updateStatusSMS() function
+            updateStatusSMS();
         }
 
         function searchSMSNotification() {
@@ -203,11 +258,17 @@
                 if (xhr.readyState === 4 && xhr.status === 200) {
                     var response = JSON.parse(xhr.responseText);
                     if (response.status === 'success') {
-                        // Handle success
-                        console.log(response.message);
+                        // Show success popup
+                        document.getElementById('successPopup').style.display = 'block';
+
+                        // Hide success popup after 3 seconds
+                        setTimeout(function () {
+                            document.getElementById('successPopup').style.display = 'none';
+                        }, 3000);
                     } else {
                         // Handle failure
                         console.error(response.message);
+                        // You can optionally show an error message here
                     }
                 }
             };
