@@ -4,7 +4,7 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        background-color: #ff8000;
+        background-color: #228B22;
         /* Blue color */
         color: #fff;
         /* Black text color */
@@ -48,7 +48,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="text-md-end">
-                        <button type="button" class="btn btn-primary" onclick="searchAndSave()">Access</button>
+                        <button type="button" class="btn btn-primary" onclick="searchAndSave()">Search</button>
                     </div>
                 </div>
             </div>
@@ -105,6 +105,45 @@
         <h4>Patching Complete</h4>
         <p>The SMS notification has been successfully updated.</p>
     </div>
+
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Patching this data?</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <form action="" id="user-form">
+                            <input type="hidden" name="id" value="">
+                            <div class="form-group">
+                                <label for="phone_number" class="control-label">Phone Number</label>
+                                <input type="text" name="phone_number" class="form-control form-control-sm rounded-0"
+                                    value="" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="account_number" class="control-label">Account Number</label>
+                                <input type="text" name="account_number" class="form-control form-control-sm rounded-0"
+                                    value="" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="username_update" class="control-label">Username Update</label>
+                                <input type="text" name="username_update" class="form-control form-control-sm rounded-0"
+                                    value="">
+                            </div>
+                            <!-- Add other form fields as needed -->
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="saveChangesBtn">Process</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
 
 
@@ -165,9 +204,17 @@
                 "Account Number: " + account;
             if (confirm(confirmationMessage)) {
                 // If user confirms, proceed with the update
-                updateStatusSMS(username, phone, account);
+                updateStatusSMS(username, phone, account, function (success) {
+                    // Clear input fields after successful processing
+                    if (success) {
+                        document.getElementById('username_update').value = '';
+                        document.getElementById('phone_act').value = '';
+                        document.getElementById('account_act').value = '';
+                    }
+                });
             }
         }
+
 
 
         function searchSMSNotification() {
@@ -208,7 +255,7 @@
                 tableHtml += '<td>' + row.status_sms + '</td>';
                 tableHtml += '<td>' + row.status_email + '</td>';
                 tableHtml += '<td>' + row.status_wa + '</td>';
-                tableHtml += '<td><button class="btn btn-primary run_sms" data-username="' + row.username_update + '" data-phone="' + row.phone_number + '" data-rekening="' + row.rekening + '">Run</button></td>';
+                tableHtml += '<td><button class="btn btn-primary run_sms" data-username="' + row.username_update + '" data-phone="' + row.phone_number + '" data-rekening="' + row.rekening + '">Patch</button></td>';
                 tableHtml += '</tr>';
             });
 
@@ -216,69 +263,102 @@
 
             document.getElementById('smsNotificationResult').innerHTML = tableHtml;
 
-            // Define the updateStatusSMS function
-            function updateStatusSMS(usernameUpdate, phoneNumber, rekening) {
-                // AJAX request to update status_sms
-                var xhr = new XMLHttpRequest();
-                xhr.open("POST", "./Actions.php?a=update_status_sms", true);
-                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-                xhr.onreadystatechange = function () {
-                    if (xhr.readyState === 4 && xhr.status === 200) {
-                        var response = JSON.parse(xhr.responseText);
-                        if (response.status === 'success') {
-                            // Handle success
-                            console.log(response.message);
-                        } else {
-                            // Handle failure
-                            console.error(response.message);
-                        }
-                    }
-                };
-                xhr.send("username_update=" + usernameUpdate + "&phone_number=" + phoneNumber + "&rekening=" + rekening);
-            }
-
             // Add event listener to "Run" buttons
             document.querySelectorAll('.run_sms').forEach(function (btn) {
-                btn.addEventListener('click', function () {
-                    var usernameUpdate = this.getAttribute('data-username');
-                    var phoneNumber = this.getAttribute('data-phone');
-                    var rekening = this.getAttribute('data-rekening');
-
-                    // Call the updateStatusSMS function
-                    updateStatusSMS(usernameUpdate, phoneNumber, rekening);
-                });
+                btn.removeEventListener('click', showModal); // Remove previous event listeners to prevent duplication
+                btn.addEventListener('click', showModal);
             });
         }
 
-        function updateStatusSMS(usernameUpdate, phoneNumber, accountNumber) {
+        function showModal() {
+            var usernameUpdate = this.getAttribute('data-username');
+            var phoneNumber = this.getAttribute('data-phone');
+            var rekening = this.getAttribute('data-rekening');
+
+            // Populate modal fields with data from the row
+            document.querySelector('#myModal input[name="phone_number"]').value = phoneNumber;
+            document.querySelector('#myModal input[name="account_number"]').value = rekening;
+
+            // Show the modal
+            $('#myModal').modal('show');
+        }
+
+        // Handle Ok button click inside the modal
+        // Handle Ok button click inside the modal
+        document.getElementById('saveChangesBtn').addEventListener('click', function () {
+            // Retrieve data from modal form
+            var usernameUpdate = document.querySelector('#myModal input[name="username_update"]').value;
+            var phoneNumber = document.querySelector('#myModal input[name="phone_number"]').value;
+            var accountNumber = document.querySelector('#myModal input[name="account_number"]').value;
+
+            // Call updateStatusSMS function
+            updateStatusSMS(usernameUpdate, phoneNumber, accountNumber, function (success) {
+                // Clear input fields after successful processing
+                if (success) {
+                    document.querySelector('#myModal input[name="username_update"]').value = '';
+                    document.querySelector('#myModal input[name="phone_number"]').value = '';
+                    document.querySelector('#myModal input[name="account_number"]').value = '';
+                }
+            });
+
+            // Close the modal
+            $('#myModal').modal('hide');
+        });
+
+
+        // Handle Cancel button click inside the modal
+        document.querySelector('#myModal button[data-dismiss="modal"]').addEventListener('click', function () {
+            // Reset modal fields if needed
+        });
+
+
+
+        function updateStatusSMS(usernameUpdate, phoneNumber, accountNumber, callback) {
             // AJAX request to update status_sms
             var xhr = new XMLHttpRequest();
             xhr.open("POST", "./Actions.php?a=update_status_sms", true);
             xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
             xhr.onreadystatechange = function () {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                    var response = JSON.parse(xhr.responseText);
-                    if (response.status === 'success') {
-                        // Show success popup
-                        document.getElementById('successPopup').style.display = 'block';
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        var response = JSON.parse(xhr.responseText);
+                        if (response.status === 'success') {
+                            // Show success popup
+                            document.getElementById('successPopup').style.display = 'block';
 
-                        // Hide success popup after 3 seconds
-                        setTimeout(function () {
-                            document.getElementById('successPopup').style.display = 'none';
-                        }, 3000);
+                            // Hide success popup after 3 seconds
+                            setTimeout(function () {
+                                document.getElementById('successPopup').style.display = 'none';
+                            }, 3000);
 
-                        // Reload searchSMSNotification after success
-                        searchSMSNotification();
+                            // Reload searchSMSNotification after success
+                            searchSMSNotification();
+
+                            // Call the callback function with success flag
+                            if (typeof callback === 'function') {
+                                callback(true);
+                            }
+                        } else {
+                            // Handle failure
+                            console.error(response.message);
+                            // You can optionally show an error message here
+                            // Call the callback function with failure flag
+                            if (typeof callback === 'function') {
+                                callback(false);
+                            }
+                        }
                     } else {
-                        // Handle failure
-                        console.error(response.message);
-                        // You can optionally show an error message here
+                        // Handle network errors
+                        console.error('Network error occurred');
+                        // Call the callback function with failure flag
+                        if (typeof callback === 'function') {
+                            callback(false);
+                        }
                     }
                 }
             };
             xhr.send("username_update=" + usernameUpdate + "&phone_number=" + phoneNumber + "&rekening=" + accountNumber);
         }
-
 
         function searchAndSave() {
             // Call saveLog function
