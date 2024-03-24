@@ -158,8 +158,15 @@
                 return;
             }
 
-            // Perform your action here, for example, call the updateStatusSMS() function
-            updateStatusSMS();
+            // Show confirmation popup
+            var confirmationMessage = "Are you sure to process the patching with the complete information below:\n" +
+                "\nUsername Update: " + username + "\n" +
+                "Phone Number: " + phone + "\n" +
+                "Account Number: " + account;
+            if (confirm(confirmationMessage)) {
+                // If user confirms, proceed with the update
+                updateStatusSMS(username, phone, account);
+            }
         }
 
 
@@ -243,13 +250,7 @@
             });
         }
 
-
-
-        function updateStatusSMS() {
-            var usernameUpdate = document.getElementById('username_update').value;
-            var phoneNumber = document.getElementById('phone_act').value;
-            var accountNumber = document.getElementById('account_act').value;
-
+        function updateStatusSMS(usernameUpdate, phoneNumber, accountNumber) {
             // AJAX request to update status_sms
             var xhr = new XMLHttpRequest();
             xhr.open("POST", "./Actions.php?a=update_status_sms", true);
@@ -265,6 +266,9 @@
                         setTimeout(function () {
                             document.getElementById('successPopup').style.display = 'none';
                         }, 3000);
+
+                        // Reload searchSMSNotification after success
+                        searchSMSNotification();
                     } else {
                         // Handle failure
                         console.error(response.message);
