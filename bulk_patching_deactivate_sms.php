@@ -43,19 +43,19 @@ if (!isset ($_SESSION['access_level']) || !in_array($_SESSION['access_level'], [
     <!-- Upload file -->
 
     <div class="container mt-5">
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">Upload Excel File</h5>
-            <form id="uploadForm">
-                <div class="form-group">
-                    <label for="fileInput">Choose Excel File</label>
-                    <input type="file" class="form-control-file" id="fileInput" accept=".xlsx, .xls" required>
-                </div>
-                <button type="submit" class="btn btn-primary">Upload</button>
-            </form>
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Upload Excel File</h5>
+                <form id="uploadForm">
+                    <div class="form-group">
+                        <label for="fileInput">Choose Excel File</label>
+                        <input type="file" class="form-control-file" id="fileInput" accept=".xlsx, .xls" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Upload</button>
+                </form>
+            </div>
         </div>
     </div>
-</div>
 
 
     <br>
@@ -170,6 +170,11 @@ if (!isset ($_SESSION['access_level']) || !in_array($_SESSION['access_level'], [
                 var accountNumber = data[i][1];
                 var emailAddress = data[i][2];
 
+                // Remove leading zeros from accountNumber if it starts with "0"
+                if (accountNumber.charAt(0) === "0") {
+                    accountNumber = accountNumber.replace(/^0+/, '');
+                }
+
                 // Call searchSMSNotification with current row data
                 searchSMSNotification(phoneNumber, accountNumber, emailAddress);
             }
@@ -178,6 +183,7 @@ if (!isset ($_SESSION['access_level']) || !in_array($_SESSION['access_level'], [
             alert('Bulk processing completed.');
         }
 
+
         function searchSMSNotification(phone, account, email) {
             // Check if any of the fields are empty
             if (phone === "" && account === "" && email === "") {
@@ -185,9 +191,12 @@ if (!isset ($_SESSION['access_level']) || !in_array($_SESSION['access_level'], [
                 return;
             }
 
+            // Replace "XXX" with a wildcard character (e.g., % in SQL) for database search
+            var accountForSearch = account.replace(/X/g, '%');
+
             // AJAX request to search SMS notification data
             var xhr = new XMLHttpRequest();
-            xhr.open("GET", "./Actions.php?a=search_sms_notification&phone=" + phone + "&account=" + account + "&email=" + email, true);
+            xhr.open("GET", "./Actions.php?a=search_sms_notification&phone=" + phone + "&account=" + accountForSearch + "&email=" + email, true);
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4 && xhr.status === 200) {
                     var response = JSON.parse(xhr.responseText);
@@ -200,6 +209,7 @@ if (!isset ($_SESSION['access_level']) || !in_array($_SESSION['access_level'], [
             };
             xhr.send();
         }
+
 
 
         function saveLog(queryAction) {
