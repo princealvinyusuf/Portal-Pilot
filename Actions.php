@@ -182,7 +182,7 @@ class Actions extends DBConnection
                                 FROM `logs` l 
                                 INNER JOIN users u ON l.user_id = u.id 
                                 WHERE 1 {$where_clause}
-                                ORDER BY unix_timestamp(l.`date_created`) ASC");
+                                ORDER BY unix_timestamp(l.`date_created`) DESC");
 
         // Process the query result and return JSON response
         $data = array();
