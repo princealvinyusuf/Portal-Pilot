@@ -1,3 +1,21 @@
+<?php
+
+// Check if the user is logged in
+if (!isset ($_SESSION['id']) || $_SESSION['id'] <= 0) {
+    header("Location: ./login.php");
+    exit;
+}
+
+// Check user access level
+if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['Administrator', 'Engineer'])) {
+    // Display the unauthorized message
+    echo '<p style="font-weight: bold; font-size: 18px; text-align: center;">Unauthorized User</p>';
+    // Optionally, you may want to include additional HTML or redirect the user
+    exit;
+}
+
+?>
+
 <div class="container py-5">
 <div class="d-flex w-100">
         <h3 class="col-auto flex-grow-1"><b>Audit Log</b></h3>

@@ -48,26 +48,30 @@ $page = isset ($_GET['page']) ? $_GET['page'] : 'home';
                             <a class="nav-link <?php echo ($page == 'home') ? 'active' : '' ?>" aria-current="page"
                                 href="./"><i class="fa fa-home"></i> Home</a>
                         </li>
-                        <li class="nav-item dropdown"> <!-- Add 'dropdown' class here -->
-                            <a class="nav-link dropdown-toggle <?php echo ($page == 'patching') ? 'active' : '' ?>"
-                                href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
-                                aria-expanded="false">
-                                <i class="fas fa-cogs"></i> Patching
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown"> <!-- Dropdown menu -->
-                                <li><a class="dropdown-item" href="./?page=patching_deactivate_sms">Deactivate SMS Notification</a></li>
-                                <li><a class="dropdown-item" href="./?page=patching_deactivate_email">Deactivate Email Notification</a></li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                                <li><a class="dropdown-item" href="#">Submenu Item 3</a></li>
-                            </ul>
-                        </li>
+                        <?php if ($_SESSION['access_level'] == 'Administrator' || $_SESSION['access_level'] == 'Engineer'): ?>
+                            <li class="nav-item dropdown"> <!-- Add 'dropdown' class here -->
+                                <a class="nav-link dropdown-toggle <?php echo ($page == 'patching') ? 'active' : '' ?>"
+                                    href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                    <i class="fas fa-cogs"></i> Patching
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown"> <!-- Dropdown menu -->
+                                    <li><a class="dropdown-item" href="./?page=patching_deactivate_sms">Deactivate SMS
+                                            Notification</a></li>
+                                    <li><a class="dropdown-item" href="./?page=patching_deactivate_email">Deactivate Email
+                                            Notification</a></li>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li><a class="dropdown-item" href="#">Submenu Item 3</a></li>
+                                </ul>
+                            </li>
+                        <?php endif; ?>
 
-                        <li class="nav-item">
+                        <!-- <li class="nav-item">
                             <a class="nav-link <?php echo ($page == 'query') ? 'active' : '' ?>" aria-current="page"
                                 href="./?page=query"><i class="fas fa-search"></i> Query</a>
-                        </li>
+                        </li> -->
 
 
                         <?php if ($_SESSION['access_level'] == 'Administrator' || $_SESSION['access_level'] == 'Engineer' || $_SESSION['access_level'] == 'Operator'): ?>
@@ -76,7 +80,7 @@ $page = isset ($_GET['page']) ? $_GET['page'] : 'home';
                                     href="./?page=users"><i class="fa fa-users"></i> Users</a>
                             </li>
                         <?php endif; ?>
-                        <?php if ($_SESSION['access_level'] == 'Administrator'): ?>
+                        <?php if ($_SESSION['access_level'] == 'Administrator' || $_SESSION['access_level'] == 'Engineer'): ?>
                             <li class="nav-item">
                                 <a class="nav-link <?php echo ($page == 'logs') ? 'active' : '' ?>" aria-current="page"
                                     href="./?page=logs"><i class="fa fa-th-list"></i> Audit Trails</a>

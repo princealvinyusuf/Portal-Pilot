@@ -23,7 +23,7 @@ require_once ('DBConnection.php');
     <div class="card">
         <div class="card-body">
             <div class="col-12 my-2 d-flex justify-content-end">
-                <?php if ($_SESSION['access_level'] == 'Administrator' || $_SESSION['access_level'] == 'Engineer'): ?>
+                <?php if ($_SESSION['access_level'] == 'Administrator'): ?>
                     <button class="btn btn-sm btn-primary rounded-0" id="add_new"><i class="fa fa-plus"></i> Add
                         New</button>
                 <?php endif; ?>
@@ -74,7 +74,7 @@ require_once ('DBConnection.php');
                                                 <li><a class="dropdown-item view_data" href="javascript:void(0)"
                                                         data-id="<?php echo $row['id'] ?>">View</a></li>
                                             <?php endif; ?>
-                                            <?php if ($_SESSION['access_level'] == 'Administrator' || $_SESSION['access_level'] == 'Engineer'): ?>
+                                            <?php if ($_SESSION['access_level'] == 'Administrator'): ?>
                                                 <li><a class="dropdown-item edit_data" href="javascript:void(0)"
                                                         data-id="<?php echo $row['id'] ?>">Edit</a></li>
                                             <?php endif; ?>
