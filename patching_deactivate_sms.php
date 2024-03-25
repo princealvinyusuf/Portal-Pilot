@@ -219,9 +219,15 @@
 
         function searchSMSNotification() {
             // Get search parameters
-            var phone = document.getElementById('phone').value;
-            var account = document.getElementById('account').value;
-            var email = document.getElementById('email').value;
+            var phone = document.getElementById('phone').value.trim();
+            var account = document.getElementById('account').value.trim();
+            var email = document.getElementById('email').value.trim();
+
+            // Check if any of the fields are empty
+            if (phone === "" && account === "" && email === "") {
+                alert("Please enter the required information in one of the columns provided.");
+                return;
+            }
 
             // AJAX request to search SMS notification data
             var xhr = new XMLHttpRequest();
@@ -239,7 +245,13 @@
             xhr.send();
         }
 
+
         function displaySMSNotificationResult(data) {
+            if (data.length === 0) {
+                document.getElementById('smsNotificationResult').innerHTML = '<p style="text-align: center; color: blue;"><strong>No Data Found</strong></p>';
+                return;
+            }
+
             var tableHtml = '<table class="table table-bordered table-striped table-hover">';
             tableHtml += '<thead><tr><th>Registration Date</th><th>Username Registration</th><th>Account Number</th><th>Email</th><th>Phone Number</th><th>Username Update</th><th>SMS Status</th><th>Email Status</th><th>WA Status</th><th>Action</th></tr></thead>';
             tableHtml += '<tbody>';
@@ -269,6 +281,7 @@
                 btn.addEventListener('click', showModal);
             });
         }
+
 
         function showModal() {
             var usernameUpdate = this.getAttribute('data-username');
