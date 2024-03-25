@@ -1,7 +1,8 @@
 <div class="container py-5">
-    <div class="d-flex w-100">
+<div class="d-flex w-100">
         <h3 class="col-auto flex-grow-1"><b>Audit Log</b></h3>
-        <button class="btn btn-sm btn-primary rounded-0" type="button" onclick="location.reload()"><i class="fa fa-retweet"></i> Refresh List</button>
+        <button class="btn btn-sm btn-primary rounded-0 mr-2" type="button" onclick="location.reload()"><i class="fa fa-retweet"></i> Refresh List</button>
+        <button id="exportExcelBtn" class="btn btn-sm btn-success rounded-0" type="button"><i class="fa fa-file-excel"></i> Export to Excel</button>
     </div>
     <hr>
     <div class="container py-3">
@@ -47,6 +48,8 @@
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.0/xlsx.full.min.js"></script>
+
 <script>
     $(function () {
         // Function to handle form submission and update audit log table
@@ -87,7 +90,19 @@
             filterLogs();
         });
 
+        // Handle click event of "Export to Excel" button
+        $('#exportExcelBtn').click(function () {
+            exportToExcel();
+        });
+
         // Initial filter on page load (optional)
         filterLogs();
     });
+
+    // Function to export table data to Excel
+    function exportToExcel() {
+        var wb = XLSX.utils.table_to_book(document.getElementById('logTable'), { sheet: "Sheet JS" }); // Convert table to workbook
+        XLSX.writeFile(wb, 'audit_log.xlsx'); // Save workbook as Excel file with name 'audit_log.xlsx'
+    }
+
 </script>

@@ -40,7 +40,7 @@ $(function(){
     $.ajax({
         url:'./Actions.php?a=save_log',
         method:'POST',
-        data:{action_made:" viewed the data of <?php echo "[id={$id}]". $name ?>"},
+        data:{action_made:"Viewed the data of: <?php echo $name ?>"},
         dataType:'json',
         error:err=>{
             console.log(err)

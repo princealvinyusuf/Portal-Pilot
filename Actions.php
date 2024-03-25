@@ -118,10 +118,11 @@ class Actions extends DBConnection
             $user_id = empty ($id) ? $this->conn->insert_id : $id;
             if (empty ($id)) {
                 $resp['msg'] = "New User successfully added.";
-                $log['action_made'] = " added [id={$user_id}] {$name} into the user list.";
+                // $log['action_made'] = " added [id={$user_id}] {$name} into the user list.";
+                $log['action_made'] = "Added new user: {$name} into the user list.";
             } else {
                 $resp['msg'] = "User successfully updated.";
-                $log['action_made'] = " updated the details of [id={$user_id}] user.";
+                $log['action_made'] = "Updated the details of: {$name} account.";
             }
 
             // Get IP address and user agent
@@ -148,7 +149,7 @@ class Actions extends DBConnection
             $resp['status'] = 'success';
             $resp['msg'] = 'User successfully deleted.';
             $log['user_id'] = $_SESSION['id'];
-            $log['action_made'] = " deleted [id={$mem['id']}] {$mem['name']} from user list.";
+            $log['action_made'] = "Deleted User: {$mem['name']} from user list.";
             $ip_address = $_SERVER['REMOTE_ADDR'];
             $user_agent = $_SERVER['HTTP_USER_AGENT'];
             $_SESSION['flashdata']['type'] = 'success';

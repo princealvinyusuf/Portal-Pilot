@@ -212,6 +212,9 @@
                         document.getElementById('account_act').value = '';
                     }
                 });
+
+                saveLog("Do Patching: Deactivate SMS Notification. Username update: " + username + ", Phone number: " + phone + ", Account number: " + account);
+
             }
         }
 
@@ -300,29 +303,43 @@
         // Handle Ok button click inside the modal
         document.getElementById('saveChangesBtn').addEventListener('click', function () {
             // Retrieve data from modal form
-            var usernameUpdate = document.querySelector('#myModal input[name="username_update"]').value;
-            var phoneNumber = document.querySelector('#myModal input[name="phone_number"]').value;
-            var accountNumber = document.querySelector('#myModal input[name="account_number"]').value;
+            var usernameUpdateInput = document.querySelector('#myModal input[name="username_update"]');
+            var phoneNumberInput = document.querySelector('#myModal input[name="phone_number"]');
+            var accountNumberInput = document.querySelector('#myModal input[name="account_number"]');
+
+            var usernameUpdate = usernameUpdateInput.value;
+            var phoneNumber = phoneNumberInput.value;
+            var accountNumber = accountNumberInput.value;
+
+            // Validate username update field
+            if (usernameUpdate.trim() === '') {
+                usernameUpdateInput.classList.add('is-invalid'); // Add 'is-invalid' class to indicate error
+                return; // Stop further execution
+            } else {
+                usernameUpdateInput.classList.remove('is-invalid'); // Remove 'is-invalid' class if previously added
+            }
 
             // Call updateStatusSMS function
             updateStatusSMS(usernameUpdate, phoneNumber, accountNumber, function (success) {
                 // Clear input fields after successful processing
                 if (success) {
-                    document.querySelector('#myModal input[name="username_update"]').value = '';
-                    document.querySelector('#myModal input[name="phone_number"]').value = '';
-                    document.querySelector('#myModal input[name="account_number"]').value = '';
+                    usernameUpdateInput.value = '';
+                    phoneNumberInput.value = '';
+                    accountNumberInput.value = '';
                 }
             });
 
             // Close the modal
             $('#myModal').modal('hide');
-        });
 
+            saveLog("Do Patching: Deactivate SMS Notification. Username update: " + usernameUpdate + ", Phone number: " + phoneNumber + ", Account number: " + accountNumber);
+        });
 
         // Handle Cancel button click inside the modal
         document.querySelector('#myModal button[data-dismiss="modal"]').addEventListener('click', function () {
             // Reset modal fields if needed
         });
+
 
 
 
@@ -375,7 +392,7 @@
 
         function searchAndSave() {
             // Call saveLog function
-            saveLog('User Searching: SMS Notification Data: ' + document.getElementById('phone').value + ' ' + document.getElementById('account').value + ' ' + document.getElementById('email').value);
+            saveLog('User Searching - SMS Notification Data: ' + 'phone number:' + ' ' + document.getElementById('phone').value + ' account number:' + document.getElementById('account').value + ' email address:' + document.getElementById('email').value);
 
             // Call searchSMSNotification function
             searchSMSNotification();
