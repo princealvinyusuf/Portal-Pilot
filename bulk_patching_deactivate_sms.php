@@ -105,6 +105,9 @@ if (!isset ($_SESSION['access_level']) || !in_array($_SESSION['access_level'], [
         document.getElementById('uploadForm').addEventListener('submit', function (event) {
             event.preventDefault(); // Prevent form submission
 
+            // Clear the table before processing the uploaded data
+            clearTable();
+
             var fileInput = document.getElementById('fileInput');
             var file = fileInput.files[0];
 
@@ -123,6 +126,12 @@ if (!isset ($_SESSION['access_level']) || !in_array($_SESSION['access_level'], [
                 reader.readAsArrayBuffer(file);
             }
         });
+
+        function clearTable() {
+            // Clear the table content
+            var tableBody = document.querySelector('#smsNotificationResult table tbody');
+            tableBody.innerHTML = '';
+        }
 
 
         function processData(data) {
@@ -145,9 +154,8 @@ if (!isset ($_SESSION['access_level']) || !in_array($_SESSION['access_level'], [
                 searchSMSNotification(phoneNumber, accountNumber, emailAddress, usernameUpdate);
             }
 
-            // Provide feedback to the user
-            alert('Bulk processing completed.');
         }
+
 
 
         // Event listener for the "Execute all patching process" button
@@ -173,6 +181,7 @@ if (!isset ($_SESSION['access_level']) || !in_array($_SESSION['access_level'], [
                         }
                     });
                 });
+
             } else {
                 // User cancelled or provided an empty username update
                 console.log('No username update provided.');
