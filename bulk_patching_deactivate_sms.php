@@ -125,8 +125,6 @@ if (!isset ($_SESSION['access_level']) || !in_array($_SESSION['access_level'], [
         });
 
 
-        // IM HERE
-
         function processData(data) {
             // Assuming each row of data has columns in the order: phone number, account number, email address, username update
             for (var i = 1; i < data.length; i++) { // Start from index 1 to skip header row
@@ -142,22 +140,9 @@ if (!isset ($_SESSION['access_level']) || !in_array($_SESSION['access_level'], [
 
                 // Replace "X" characters in accountNumber with wildcard character
                 var accountForSearch = accountNumber.replace(/X/g, '%');
-            
-                console.log(accountForSearch); // Log the replaced account number for debugging
-
-                // Call updateStatusSMS function for each row
-                updateStatusSMS(usernameUpdate, phoneNumber, accountNumber, function (success) {
-                    if (success) {
-                        // Optional: Update UI or perform other actions upon success
-                        console.log('Status updated successfully for:', usernameUpdate);
-                    } else {
-                        // Optional: Handle failure case
-                        console.error('Failed to update status for:', usernameUpdate);
-                    }
-                });
 
                 // Call searchSMSNotification with current row data
-                searchSMSNotification(phoneNumber, accountNumber, emailAddress);
+                searchSMSNotification(phoneNumber, accountNumber, emailAddress, usernameUpdate);
             }
 
             // Provide feedback to the user
@@ -165,6 +150,34 @@ if (!isset ($_SESSION['access_level']) || !in_array($_SESSION['access_level'], [
         }
 
 
+        // Event listener for the "Execute all patching process" button
+        document.getElementById('executePatchingBtn').addEventListener('click', function () {
+            // Prompt the user to input the username update
+            var usernameUpdate = prompt("Please enter the username update:");
+
+            // Check if the user provided a username update
+            if (usernameUpdate !== null && usernameUpdate.trim() !== '') {
+                // Call the updateStatusSMS function for each row in the table
+                document.querySelectorAll('#smsNotificationResult table tbody tr').forEach(function (row) {
+                    var phoneNumber = row.querySelector('[data-phone]').getAttribute('data-phone');
+                    var accountNumber = row.querySelector('[data-rekening]').getAttribute('data-rekening');
+
+                    // Call updateStatusSMS function for each row
+                    updateStatusSMS(usernameUpdate, phoneNumber, accountNumber, function (success) {
+                        if (success) {
+                            // Optional: Update UI or perform other actions upon success
+                            console.log('Status updated successfully for:', usernameUpdate);
+                        } else {
+                            // Optional: Handle failure case
+                            console.error('Failed to update status for:', usernameUpdate);
+                        }
+                    });
+                });
+            } else {
+                // User cancelled or provided an empty username update
+                console.log('No username update provided.');
+            }
+        });
 
 
 
@@ -190,8 +203,6 @@ if (!isset ($_SESSION['access_level']) || !in_array($_SESSION['access_level'], [
             };
             xhr.send();
         }
-
-
 
 
         function saveLog(queryAction) {
@@ -234,10 +245,10 @@ if (!isset ($_SESSION['access_level']) || !in_array($_SESSION['access_level'], [
                 var newRow = '<tr>';
                 newRow += '<td>' + row.date_reg + '</td>';
                 newRow += '<td>' + row.username_reg + '</td>';
-                newRow += '<td>' + row.rekening + '</td>';
+                newRow += '<td data-rekening="' + row.rekening + '">' + row.rekening + '</td>';
                 newRow += '<td>' + row.email + '</td>';
-                newRow += '<td>' + row.phone_number + '</td>';
-                newRow += '<td>' + row.username_update + '</td>';
+                newRow += '<td data-phone="' + row.phone_number + '">' + row.phone_number + '</td>';
+                newRow += '<td data-username="' + row.username_update + '">' + row.username_update + '</td>';
                 newRow += '<td>' + row.status_sms + '</td>';
                 newRow += '<td>' + row.status_email + '</td>';
                 newRow += '<td>' + row.status_wa + '</td>';
@@ -258,31 +269,8 @@ if (!isset ($_SESSION['access_level']) || !in_array($_SESSION['access_level'], [
             } else {
                 console.error("Button with ID 'executePatchingBtn' not found.");
             }
-
-
         }
 
-
-        // Event listener for the "Execute all patching process" button
-        document.getElementById('executePatchingBtn').addEventListener('click', function () {
-            // Call the updateStatusSMS function for each row in the table
-            document.querySelectorAll('#smsNotificationResult table tbody tr').forEach(function (row) {
-                var usernameUpdate = row.querySelector('[data-username]').getAttribute('data-username');
-                var phoneNumber = row.querySelector('[data-phone]').getAttribute('data-phone');
-                var accountNumber = row.querySelector('[data-rekening]').getAttribute('data-rekening');
-
-                // Call updateStatusSMS function for each row
-                updateStatusSMS(usernameUpdate, phoneNumber, accountNumber, function (success) {
-                    if (success) {
-                        // Optional: Update UI or perform other actions upon success
-                        console.log('Status updated successfully for:', usernameUpdate);
-                    } else {
-                        // Optional: Handle failure case
-                        console.error('Failed to update status for:', usernameUpdate);
-                    }
-                });
-            });
-        });
 
 
         function updateStatusSMS(usernameUpdate, phoneNumber, accountNumber, callback) {
