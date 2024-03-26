@@ -24,8 +24,8 @@
             <div class="col-md-4">
                 <div class="card mb-4">
                     <div class="card-body">
-                        <h6 class="card-title">Menu Deaktivasi SMS Notifikasi</h6>
-                        <button type="button" class="btn btn-primary" onclick="saveLogAndRedirect()">Access</button>
+                        <h6 class="card-title" style="font-weight: bold;">Menu Deaktivasi SMS Notifikasi</h6>
+                        <button type="button" class="btn btn-primary" onclick="saveLogAndRedirect(1)">Access</button>
 
                     </div>
                 </div>
@@ -33,18 +33,16 @@
             <div class="col-md-4">
                 <div class="card mb-4">
                     <div class="card-body">
-                        <h6 class="card-title">Menu Deaktivasi Email Notifikasi</h6>
-                        <button type="button" class="btn btn-primary"
-                            onclick="saveLog('User Accesssing Menu: Deaktivasi Email Notifikasi')">Access</button>
+                        <h6 class="card-title" style="font-weight: bold;">Menu Deaktivasi Email Notifikasi</h6>
+                        <button type="button" class="btn btn-primary" onclick="saveLogAndRedirect(2)">Access</button>
                     </div>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="card mb-4">
                     <div class="card-body">
-                        <h6 class="card-title">Menu 3</h6>
-                        <button type="button" class="btn btn-primary"
-                            onclick="saveLog('User Accesssing Menu: Menu 2')">Access</button>
+                        <h6 class="card-title" style="font-weight: bold;">Menu Deaktivasi WA Notifikasi</h6>
+                        <button type="button" class="btn btn-primary" onclick="saveLogAndRedirect(3)">Access</button>
                     </div>
                 </div>
             </div>
@@ -54,27 +52,8 @@
             <div class="col-md-4">
                 <div class="card mb-4">
                     <div class="card-body">
-                        <h6 class="card-title">Menu 4</h6>
-                        <button type="button" class="btn btn-primary"
-                            onclick="saveLog('User Accesssing Menu: Menu 2')">Access</button>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <h6 class="card-title">Menu 5</h6>
-                        <button type="button" class="btn btn-primary"
-                            onclick="saveLog('User Accesssing Menu: Menu 2')">Access</button>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <h6 class="card-title">Menu 6</h6>
-                        <button type="button" class="btn btn-primary"
-                            onclick="saveLog('User Accesssing Menu: Menu 2')">Access</button>
+                        <h6 class="card-title" style="font-weight: bold;">Menu Bulking SMS Notifikasi</h6>
+                        <button type="button" class="btn btn-primary" onclick="saveLogAndRedirect(4)">Access</button>
                     </div>
                 </div>
             </div>
@@ -105,13 +84,34 @@
 </div> -->
 
 <script>
-    function saveLogAndRedirect() {
-        // Save log
-        saveLog('User Accessing Menu: Deaktivasi SMS Notifikasi');
+    function saveLogAndRedirect(number) {
 
-        // Redirect to patching_deativate_sms.php
-        window.location.href = './?page=patching_deactivate_sms';
+        // Redirect based on the number
+        switch (number) {
+            case 1:
+                window.location.href = './?page=patching_deactivate_sms';
+                saveLog('User Accessing Menu: Deaktivasi SMS Notifikasi');
+                break;
+            case 2:
+                window.location.href = './?page=patching_deactivate_email';
+                saveLog('User Accessing Menu: Deaktivasi Email Notifikasi');
+                break;
+            case 3:
+                window.location.href = './?page=patching_deactivate_wa';
+                saveLog('User Accessing Menu: Deaktivasi WA Notifikasi');
+                break;
+            case 4:
+                window.location.href = './?page=bulk_patching_deactivate_sms';
+                saveLog('User Accessing Menu: Bulking Deaktivasi SMS Notifikasi');
+                break;
+
+            default:
+                // Default redirection if number doesn't match any case
+                window.location.href = './';
+                break;
+        }
     }
+
 
     function saveLog(queryAction) {
         // AJAX request to save_log before submitting the form

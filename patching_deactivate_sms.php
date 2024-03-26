@@ -85,7 +85,7 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
     <br>
     <!-- Deactivate SMS Notification -->
 
-    <div class="card">
+    <div class="card d-none">
         <div class="container py-5">
             <h4 class="mb-4"><strong>Action - Deactivate SMS Notification</strong></h4>
             <div class="row">
