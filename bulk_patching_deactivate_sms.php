@@ -125,6 +125,7 @@ if (!isset ($_SESSION['access_level']) || !in_array($_SESSION['access_level'], [
         });
 
 
+        // IM HERE
 
         function processData(data) {
             // Assuming each row of data has columns in the order: phone number, account number, email address, username update
@@ -141,10 +142,11 @@ if (!isset ($_SESSION['access_level']) || !in_array($_SESSION['access_level'], [
 
                 // Replace "X" characters in accountNumber with wildcard character
                 var accountForSearch = accountNumber.replace(/X/g, '%');
+            
                 console.log(accountForSearch); // Log the replaced account number for debugging
 
                 // Call updateStatusSMS function for each row
-                updateStatusSMS(usernameUpdate, phoneNumber, accountForSearch, function (success) {
+                updateStatusSMS(usernameUpdate, phoneNumber, accountNumber, function (success) {
                     if (success) {
                         // Optional: Update UI or perform other actions upon success
                         console.log('Status updated successfully for:', usernameUpdate);
@@ -155,7 +157,7 @@ if (!isset ($_SESSION['access_level']) || !in_array($_SESSION['access_level'], [
                 });
 
                 // Call searchSMSNotification with current row data
-                searchSMSNotification(phoneNumber, accountForSearch, emailAddress);
+                searchSMSNotification(phoneNumber, accountNumber, emailAddress);
             }
 
             // Provide feedback to the user
