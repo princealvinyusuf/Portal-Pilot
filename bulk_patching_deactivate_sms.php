@@ -76,7 +76,6 @@ if (!isset ($_SESSION['access_level']) || !in_array($_SESSION['access_level'], [
                             <th>SMS Status</th>
                             <th>Email Status</th>
                             <th>WA Status</th>
-                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -96,44 +95,6 @@ if (!isset ($_SESSION['access_level']) || !in_array($_SESSION['access_level'], [
     <div id="successPopup" class="success-popup">
         <h4>Patching Complete</h4>
         <p>The SMS notification has been successfully updated.</p>
-    </div>
-
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Patching this data?</h5>
-                </div>
-                <div class="modal-body">
-                    <div class="container-fluid">
-                        <form action="" id="user-form">
-                            <input type="hidden" name="id" value="">
-                            <div class="form-group">
-                                <label for="phone_number" class="control-label">Phone Number</label>
-                                <input type="text" name="phone_number" class="form-control form-control-sm rounded-0"
-                                    value="" readonly>
-                            </div>
-                            <div class="form-group">
-                                <label for="account_number" class="control-label">Account Number</label>
-                                <input type="text" name="account_number" class="form-control form-control-sm rounded-0"
-                                    value="" readonly>
-                            </div>
-                            <div class="form-group">
-                                <label for="username_update" class="control-label">Username Update</label>
-                                <input type="text" name="username_update" class="form-control form-control-sm rounded-0"
-                                    value="">
-                            </div>
-                            <!-- Add other form fields as needed -->
-                        </form>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="saveChangesBtn">Process</button>
-                </div>
-            </div>
-        </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
@@ -163,25 +124,46 @@ if (!isset ($_SESSION['access_level']) || !in_array($_SESSION['access_level'], [
             }
         });
 
+
+
         function processData(data) {
-            // Assuming each row of data has columns in the order: phone number, account number, email address
+            // Assuming each row of data has columns in the order: phone number, account number, email address, username update
             for (var i = 1; i < data.length; i++) { // Start from index 1 to skip header row
                 var phoneNumber = data[i][0];
                 var accountNumber = data[i][1];
                 var emailAddress = data[i][2];
+                var usernameUpdate = data[i][3]; // Assuming "username update" is the 4th column
 
                 // Remove leading zeros from accountNumber if it starts with "0"
                 if (accountNumber.charAt(0) === "0") {
                     accountNumber = accountNumber.replace(/^0+/, '');
                 }
 
+                // Replace "X" characters in accountNumber with wildcard character
+                var accountForSearch = accountNumber.replace(/X/g, '%');
+                console.log(accountForSearch); // Log the replaced account number for debugging
+
+                // Call updateStatusSMS function for each row
+                updateStatusSMS(usernameUpdate, phoneNumber, accountForSearch, function (success) {
+                    if (success) {
+                        // Optional: Update UI or perform other actions upon success
+                        console.log('Status updated successfully for:', usernameUpdate);
+                    } else {
+                        // Optional: Handle failure case
+                        console.error('Failed to update status for:', usernameUpdate);
+                    }
+                });
+
                 // Call searchSMSNotification with current row data
-                searchSMSNotification(phoneNumber, accountNumber, emailAddress);
+                searchSMSNotification(phoneNumber, accountForSearch, emailAddress);
             }
 
             // Provide feedback to the user
             alert('Bulk processing completed.');
         }
+
+
+
 
 
         function searchSMSNotification(phone, account, email) {
@@ -191,12 +173,9 @@ if (!isset ($_SESSION['access_level']) || !in_array($_SESSION['access_level'], [
                 return;
             }
 
-            // Replace "XXX" with a wildcard character (e.g., % in SQL) for database search
-            var accountForSearch = account.replace(/X/g, '%');
-
-            // AJAX request to search SMS notification data
+            // AJAX request  to search SMS notification data
             var xhr = new XMLHttpRequest();
-            xhr.open("GET", "./Actions.php?a=search_sms_notification&phone=" + phone + "&account=" + accountForSearch + "&email=" + email, true);
+            xhr.open("GET", "./Actions.php?a=search_sms_notification&phone=" + phone + "&account=" + account + "&email=" + email, true);
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4 && xhr.status === 200) {
                     var response = JSON.parse(xhr.responseText);
@@ -209,6 +188,7 @@ if (!isset ($_SESSION['access_level']) || !in_array($_SESSION['access_level'], [
             };
             xhr.send();
         }
+
 
 
 
@@ -227,68 +207,26 @@ if (!isset ($_SESSION['access_level']) || !in_array($_SESSION['access_level'], [
 
         }
 
-        function validateForm() {
-            var username = document.getElementById('username_update').value;
-            var phone = document.getElementById('phone_act').value;
-            var account = document.getElementById('account_act').value;
-
-            if (username === '' || phone === '' || account === '') {
-                alert('Please completely fill the form');
-                return;
-            }
-
-            // Regular expressions for validation
-            var usernameRegex = /^[a-zA-Z0-9\s!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~]+$/;
-            var phoneRegex = /^\d+$/;
-            var accountRegex = /^\d+$/;
-
-            // Validation checks
-            if (!usernameRegex.test(username)) {
-                alert('Please fill the username field with letters, numbers, and special characters only.');
-                return;
-            }
-            if (!phoneRegex.test(phone)) {
-                alert('Please fill the phone number field with only numbers.');
-                return;
-            }
-            if (phone.substring(0, 2) !== '08') {
-                alert('The phone number entered is incorrect.');
-                return;
-            }
-            if (!accountRegex.test(account)) {
-                alert('Please fill the account number field with only numbers.');
-                return;
-            }
-
-            // Show confirmation popup
-            var confirmationMessage = "Are you sure to process the patching with the complete information below:\n" +
-                "\nUsername Update: " + username + "\n" +
-                "Phone Number: " + phone + "\n" +
-                "Account Number: " + account;
-            if (confirm(confirmationMessage)) {
-                // If user confirms, proceed with the update
-                updateStatusSMS(username, phone, account, function (success) {
-                    // Clear input fields after successful processing
-                    if (success) {
-                        document.getElementById('username_update').value = '';
-                        document.getElementById('phone_act').value = '';
-                        document.getElementById('account_act').value = '';
-                    }
-                });
-
-                saveLog("Do Patching: Deactivate SMS Notification. Username update: " + username + ", Phone number: " + phone + ", Account number: " + account);
-
-            }
-        }
-
 
         function displaySMSNotificationResult(data) {
-            if (data.length === 0) {
-                document.getElementById('smsNotificationResult').innerHTML = '<p style="text-align: center; color: blue;"><strong>No Data Found</strong></p>';
+            if (!data || data.length === 0) {
+                console.log("No data to display.");
                 return;
             }
 
             var tableBody = document.querySelector('#smsNotificationResult table tbody');
+
+            // Check if tableBody is null or undefined
+            if (!tableBody) {
+                // Create table body if it doesn't exist
+                var table = document.querySelector('#smsNotificationResult table');
+                if (!table) {
+                    console.error("Table not found.");
+                    return;
+                }
+                tableBody = document.createElement('tbody');
+                table.appendChild(tableBody);
+            }
 
             data.forEach(function (row) {
                 var newRow = '<tr>';
@@ -301,23 +239,29 @@ if (!isset ($_SESSION['access_level']) || !in_array($_SESSION['access_level'], [
                 newRow += '<td>' + row.status_sms + '</td>';
                 newRow += '<td>' + row.status_email + '</td>';
                 newRow += '<td>' + row.status_wa + '</td>';
-                newRow += '<td><button class="btn btn-primary run_sms" data-username="' + row.username_update + '" data-phone="' + row.phone_number + '" data-rekening="' + row.rekening + '">Patch</button></td>';
                 newRow += '</tr>';
-                tableBody.insertAdjacentHTML('beforeend', newRow);
+
+                // Check if tableBody is null or undefined
+                if (tableBody) {
+                    tableBody.insertAdjacentHTML('beforeend', newRow);
+                } else {
+                    console.error("Table body not found.");
+                }
             });
 
             // Show the button after the data table is displayed
-            document.getElementById('executePatchingBtn').style.display = 'block';
+            var executePatchingBtn = document.getElementById('executePatchingBtn');
+            if (executePatchingBtn) {
+                executePatchingBtn.style.display = 'block';
+            } else {
+                console.error("Button with ID 'executePatchingBtn' not found.");
+            }
 
-            // Add event listener to "Run" buttons
-            document.querySelectorAll('.run_sms').forEach(function (btn) {
-                btn.removeEventListener('click', showModal); // Remove previous event listeners to prevent duplication
-                btn.addEventListener('click', showModal);
-            });
+
         }
 
+
         // Event listener for the "Execute all patching process" button
-        // Fixing in here
         document.getElementById('executePatchingBtn').addEventListener('click', function () {
             // Call the updateStatusSMS function for each row in the table
             document.querySelectorAll('#smsNotificationResult table tbody tr').forEach(function (row) {
@@ -336,63 +280,6 @@ if (!isset ($_SESSION['access_level']) || !in_array($_SESSION['access_level'], [
                     }
                 });
             });
-        });
-
-
-
-
-        function showModal() {
-            var usernameUpdate = this.getAttribute('data-username');
-            var phoneNumber = this.getAttribute('data-phone');
-            var rekening = this.getAttribute('data-rekening');
-
-            // Populate modal fields with data from the row
-            document.querySelector('#myModal input[name="phone_number"]').value = phoneNumber;
-            document.querySelector('#myModal input[name="account_number"]').value = rekening;
-
-            // Show the modal
-            $('#myModal').modal('show');
-        }
-
-        // Handle Ok button click inside the modal
-        // Handle Ok button click inside the modal
-        document.getElementById('saveChangesBtn').addEventListener('click', function () {
-            // Retrieve data from modal form
-            var usernameUpdateInput = document.querySelector('#myModal input[name="username_update"]');
-            var phoneNumberInput = document.querySelector('#myModal input[name="phone_number"]');
-            var accountNumberInput = document.querySelector('#myModal input[name="account_number"]');
-
-            var usernameUpdate = usernameUpdateInput.value;
-            var phoneNumber = phoneNumberInput.value;
-            var accountNumber = accountNumberInput.value;
-
-            // Validate username update field
-            if (usernameUpdate.trim() === '') {
-                usernameUpdateInput.classList.add('is-invalid'); // Add 'is-invalid' class to indicate error
-                return; // Stop further execution
-            } else {
-                usernameUpdateInput.classList.remove('is-invalid'); // Remove 'is-invalid' class if previously added
-            }
-
-            // Call updateStatusSMS function
-            updateStatusSMS(usernameUpdate, phoneNumber, accountNumber, function (success) {
-                // Clear input fields after successful processing
-                if (success) {
-                    usernameUpdateInput.value = '';
-                    phoneNumberInput.value = '';
-                    accountNumberInput.value = '';
-                }
-            });
-
-            // Close the modal
-            $('#myModal').modal('hide');
-
-            saveLog("Do Patching: Deactivate SMS Notification. Username update: " + usernameUpdate + ", Phone number: " + phoneNumber + ", Account number: " + accountNumber);
-        });
-
-        // Handle Cancel button click inside the modal
-        document.querySelector('#myModal button[data-dismiss="modal"]').addEventListener('click', function () {
-            // Reset modal fields if needed
         });
 
 
@@ -442,6 +329,7 @@ if (!isset ($_SESSION['access_level']) || !in_array($_SESSION['access_level'], [
             };
             xhr.send("username_update=" + usernameUpdate + "&phone_number=" + phoneNumber + "&rekening=" + accountNumber);
         }
+
 
 
     </script>

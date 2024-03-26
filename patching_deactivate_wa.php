@@ -250,7 +250,7 @@
             // Close the modal
             $('#myModal').modal('hide');
 
-            saveLog("Do Patching: Deactivate SMS Notification. Username update: " + usernameUpdate + ", Phone number: " + phoneNumber + ", Account number: " + accountNumber);
+            saveLog("Do Patching: Deactivate WA Notification. Username update: " + usernameUpdate + ", Phone number: " + phoneNumber + ", Account number: " + accountNumber);
         });
 
         // Handle Cancel button click inside the modal

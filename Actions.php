@@ -234,42 +234,6 @@ class Actions extends DBConnection
         }
     }
 
-    function search_sms_notification($phone, $account, $email)
-    {
-        // Construct SQL query based on search parameters
-        $whereClause = '';
-        $conditions = [];
-        if (!empty ($phone)) {
-            $conditions[] = "phone_number LIKE '%$phone%'";
-        }
-        if (!empty ($account)) {
-            // Replace "X" characters in account with wildcard character
-            $accountForSearch = str_replace('X', '%', $account);
-            $conditions[] = "rekening LIKE '%$accountForSearch%'";
-        }
-        if (!empty ($email)) {
-            $conditions[] = "email LIKE '%$email%'";
-        }
-        if (!empty ($conditions)) {
-            $whereClause = 'WHERE ' . implode(' AND ', $conditions);
-        }
-
-        $sql = "SELECT * FROM data_registration $whereClause ORDER BY date_reg ASC";
-
-        // Execute the query
-        $result = $this->conn->query($sql);
-        if ($result) {
-            $data = [];
-            while ($row = $result->fetch_assoc()) {
-                $data[] = $row;
-            }
-            return json_encode(['status' => 'success', 'data' => $data]);
-        } else {
-            return json_encode(['status' => 'failed', 'message' => 'Failed to retrieve SMS notification data.']);
-        }
-    }
-
-
     function update_status_sms($username_update, $phone_number, $rekening)
     {
         // Check if username_update is empty
@@ -381,6 +345,43 @@ class Actions extends DBConnection
         }
     }
 
+
+    function search_sms_notification($phone, $account, $email)
+    {
+        // Construct SQL query based on search parameters
+        $whereClause = '';
+        $conditions = [];
+        if (!empty ($phone)) {
+            $conditions[] = "phone_number LIKE '%$phone%'";
+        }
+        if (!empty ($account)) {
+            // Replace "X" characters in account with wildcard character
+            $accountForSearch = str_replace('X', '%', $account);
+            $conditions[] = "rekening LIKE '%$accountForSearch%'";
+        }
+        if (!empty ($email)) {
+            $conditions[] = "email LIKE '%$email%'";
+        }
+        if (!empty ($conditions)) {
+            $whereClause = 'WHERE ' . implode(' AND ', $conditions);
+        }
+
+        
+        $sql = "SELECT * FROM data_registration $whereClause ORDER BY date_reg ASC";
+
+        // Execute the query
+        $result = $this->conn->query($sql);
+        if ($result) {
+            $data = [];
+            while ($row = $result->fetch_assoc()) {
+                $data[] = $row;
+            }
+            return json_encode(['status' => 'success', 'data' => $data]);
+        } else {
+            print ("Not works");
+            return json_encode(['status' => 'failed', 'message' => 'Failed to retrieve SMS notification data.']);
+        }
+    }
 
 
 
