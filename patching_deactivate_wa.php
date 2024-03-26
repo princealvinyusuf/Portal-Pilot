@@ -17,30 +17,34 @@
 
 <div class="container py-5">
     <div class="d-flex w-100">
-        <h3 class="col-auto flex-grow-1"><b>Patching - Menu Deaktivasi Email Notifikasi</b></h3>
+        <h3 class="col-auto flex-grow-1"><b>Patching - Menu Deaktivasi WA Notifikasi</b></h3>
     </div>
     <hr>
     <!-- Looking SMS Notification Data -->
     <div class="card">
         <div class="container py-5">
-            <h4 class="mb-4"><strong>Looking for Email Notification Data</strong></h4>
+            <h4 class="mb-4"><strong>Looking for WA Notification Data</strong></h4>
             <div class="row">
-                <!-- Hide phone number field -->
-                <div class="col-md-4 d-none">
-                    <div class="form-group mb-3">
-                        <label for="phone">Phone Number</label>
-                        <input type="text" class="form-control" id="phone" placeholder="Enter phone number">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group mb-3">
+                            <label for="phone">Phone Number</label>
+                            <input type="text" class="form-control" id="phone" placeholder="Enter phone number">
+                        </div>
                     </div>
                 </div>
                 <!-- Hide account number field -->
-                <div class="col-md-4 d-none">
-                    <div class="form-group mb-3">
-                        <label for="account">Account Number</label>
-                        <input type="text" class="form-control" id="account" placeholder="Enter account number">
+                <div class="row">
+                    <div class="col-md-12 d-none">
+                        <div class="form-group mb-3">
+                            <label for="account">Account Number</label>
+                            <input type="text" class="form-control" id="account" placeholder="Enter account number">
+                        </div>
                     </div>
                 </div>
+                <!-- Hide email address field -->
                 <div class="row">
-                    <div class="col-md-12"> <!-- Change col-md-4 to col-md-12 -->
+                    <div class="col-md-12 d-none"> <!-- Change col-md-4 to col-md-12 -->
                         <div class="form-group mb-3">
                             <label for="email">Email Address</label>
                             <input type="email" class="form-control" id="email" placeholder="Enter email address">
@@ -64,14 +68,14 @@
     <!-- Result SMS Notification Data -->
     <div class="card">
         <div class="card-body">
-            <h4 class="mb-4"><strong>Result of Email Notification Data</strong></h4>
+            <h4 class="mb-4"><strong>Result of WA Notification Data</strong></h4>
             <div id="smsNotificationResult"></div>
         </div>
     </div>
 
     <br>
 
-    
+
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -112,7 +116,7 @@
 
     <div id="successPopup" class="success-popup">
         <h4>Patching Complete</h4>
-        <p>The Email notification has been successfully updated.</p>
+        <p>The WA notification has been successfully updated.</p>
     </div>
 
     <script>
@@ -146,6 +150,8 @@
                 return;
             }
 
+            console.log(phone, account, email)
+
             // AJAX request to search SMS notification data
             var xhr = new XMLHttpRequest();
             xhr.open("GET", "./Actions.php?a=search_sms_notification&phone=" + phone + "&account=" + account + "&email=" + email, true);
@@ -156,6 +162,7 @@
                         displaySMSNotificationResult(response.data);
                     } else {
                         alert("Failed to retrieve SMS notification data.");
+
                     }
                 }
             };
@@ -170,7 +177,7 @@
             }
 
             var tableHtml = '<table class="table table-bordered table-striped table-hover">';
-            tableHtml += '<thead><tr><th>Registration Date</th><th>Username Registration</th><th>Account Number</th><th>Email</th><th>Phone Number</th><th>Username Update</th><th>Email Status</th><th>Action</th></tr></thead>';
+            tableHtml += '<thead><tr><th>Registration Date</th><th>Username Registration</th><th>Account Number</th><th>Email</th><th>Phone Number</th><th>Username Update</th><th>WA Status</th><th>Action</th></tr></thead>';
             tableHtml += '<tbody>';
 
             data.forEach(function (row) {
@@ -181,7 +188,7 @@
                 tableHtml += '<td>' + row.email + '</td>';
                 tableHtml += '<td>' + row.phone_number + '</td>';
                 tableHtml += '<td>' + row.username_update + '</td>';
-                tableHtml += '<td>' + row.status_email + '</td>';
+                tableHtml += '<td>' + row.status_wa + '</td>';
                 tableHtml += '<td><button class="btn btn-primary run_sms" data-username="' + row.username_update + '" data-phone="' + row.phone_number + '" data-rekening="' + row.rekening + '">Patch</button></td>';
                 tableHtml += '</tr>';
             });
@@ -257,7 +264,7 @@
         function updateStatusSMS(usernameUpdate, phoneNumber, accountNumber, callback) {
             // AJAX request to update status_sms
             var xhr = new XMLHttpRequest();
-            xhr.open("POST", "./Actions.php?a=update_status_email", true);
+            xhr.open("POST", "./Actions.php?a=update_status_wa", true);
             xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4) {
@@ -305,7 +312,7 @@
 
         function searchAndSave() {
             // Call saveLog function
-            saveLog('User Searching: Email Notification Data: ' + document.getElementById('phone').value + ' ' + document.getElementById('account').value + ' ' + document.getElementById('email').value);
+            saveLog('User Searching: WA Notification Data: ' + document.getElementById('phone').value + ' ' + document.getElementById('account').value + ' ' + document.getElementById('email').value);
 
             // Call searchSMSNotification function
             searchSMSNotification();

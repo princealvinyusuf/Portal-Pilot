@@ -60,7 +60,8 @@ $page = isset ($_GET['page']) ? $_GET['page'] : 'home';
                                             Notification</a></li>
                                     <li><a class="dropdown-item" href="./?page=patching_deactivate_email">Deactivate Email
                                             Notification</a></li>
-
+                                    <li><a class="dropdown-item" href="./?page=patching_deactivate_wa">Deactivate WA
+                                            Notification</a></li>
                                     <li>
                                         <hr class="dropdown-divider">
                                     </li>
