@@ -58,11 +58,14 @@ $page = isset ($_GET['page']) ? $_GET['page'] : 'home';
                                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown"> <!-- Dropdown menu -->
                                     <li><a class="dropdown-item" href="./?page=patching_deactivate_sms">Deactivate SMS
                                             Notification</a></li>
-                                    <li><a class="dropdown-item" href="./?page=bulk_patching_deactivate_sms">Deactivate SMS Bulking</a></li>
+                                    <li><a class="dropdown-item" href="./?page=patching_deactivate_email">Deactivate Email
+                                            Notification</a></li>
+
                                     <li>
                                         <hr class="dropdown-divider">
                                     </li>
-                                    <li><a class="dropdown-item" href="#">Submenu Item 3</a></li>
+                                    <li><a class="dropdown-item" href="./?page=bulk_patching_deactivate_sms">Deactivate SMS
+                                            Bulking</a></li>
                                 </ul>
                             </li>
                         <?php endif; ?>

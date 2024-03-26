@@ -274,7 +274,7 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
             }
 
             var tableHtml = '<table class="table table-bordered table-striped table-hover">';
-            tableHtml += '<thead><tr><th>Registration Date</th><th>Username Registration</th><th>Account Number</th><th>Email</th><th>Phone Number</th><th>Username Update</th><th>SMS Status</th><th>Email Status</th><th>WA Status</th><th>Action</th></tr></thead>';
+            tableHtml += '<thead><tr><th>Registration Date</th><th>Username Registration</th><th>Account Number</th><th>Email</th><th>Phone Number</th><th>Username Update</th><th>SMS Status</th><th>Action</th></tr></thead>';
             tableHtml += '<tbody>';
 
             data.forEach(function (row) {
@@ -286,8 +286,6 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
                 tableHtml += '<td>' + row.phone_number + '</td>';
                 tableHtml += '<td>' + row.username_update + '</td>';
                 tableHtml += '<td>' + row.status_sms + '</td>';
-                tableHtml += '<td>' + row.status_email + '</td>';
-                tableHtml += '<td>' + row.status_wa + '</td>';
                 tableHtml += '<td><button class="btn btn-primary run_sms" data-username="' + row.username_update + '" data-phone="' + row.phone_number + '" data-rekening="' + row.rekening + '">Patch</button></td>';
                 tableHtml += '</tr>';
             });
