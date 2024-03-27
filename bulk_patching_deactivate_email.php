@@ -47,7 +47,7 @@ if (!isset ($_SESSION['access_level']) || !in_array($_SESSION['access_level'], [
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h5 class="card-title">Upload Excel File</h5>
-                    <a href="./downloads/sms_deac_bulk.xlsx" download class="btn btn-secondary">Download the filling
+                    <a href="./downloads/email_deac_bulk.xlsx" download class="btn btn-secondary">Download the filling
                         template</a>
                 </div>
                 <form id="uploadForm">
