@@ -36,7 +36,7 @@ if (!isset ($_SESSION['access_level']) || !in_array($_SESSION['access_level'], [
 
 <div class="container py-5">
     <div class="d-flex w-100">
-        <h3 class="col-auto flex-grow-1"><b>Patching - Bulking SMS Notifikasi</b></h3>
+        <h3 class="col-auto flex-grow-1"><b>Patching - Bulking WA Notifikasi</b></h3>
     </div>
     <hr>
 
@@ -47,7 +47,7 @@ if (!isset ($_SESSION['access_level']) || !in_array($_SESSION['access_level'], [
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h5 class="card-title">Upload Excel File</h5>
-                    <a href="./downloads/sms_deac_bulk.xlsx" download class="btn btn-secondary">Download the filling
+                    <a href="./downloads/wa_deac_bulk.xlsx" download class="btn btn-secondary">Download the filling
                         template</a>
                 </div>
                 <form id="uploadForm">
@@ -67,7 +67,7 @@ if (!isset ($_SESSION['access_level']) || !in_array($_SESSION['access_level'], [
     <!-- Result SMS Notification Data -->
     <div class="card">
         <div class="card-body">
-            <h4 class="mb-4"><strong>Result of SMS Notification Data</strong></h4>
+            <h4 class="mb-4"><strong>Result of WA Notification Data</strong></h4>
             <div id="smsNotificationResult">
                 <table class="table table-bordered table-striped table-hover">
                     <thead>
@@ -78,7 +78,7 @@ if (!isset ($_SESSION['access_level']) || !in_array($_SESSION['access_level'], [
                             <th>Email</th>
                             <th>Phone Number</th>
                             <th>Username Update</th>
-                            <th>SMS Status</th>
+                            <th>WA Status</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -97,7 +97,7 @@ if (!isset ($_SESSION['access_level']) || !in_array($_SESSION['access_level'], [
 
     <div id="successPopup" class="success-popup">
         <h4>Patching Complete</h4>
-        <p>The SMS notification has been successfully updated.</p>
+        <p>The WA notification has been successfully updated.</p>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
@@ -259,7 +259,7 @@ if (!isset ($_SESSION['access_level']) || !in_array($_SESSION['access_level'], [
                 newRow += '<td>' + row.email + '</td>';
                 newRow += '<td data-phone="' + row.phone_number + '">' + row.phone_number + '</td>';
                 newRow += '<td data-username="' + row.username_update + '">' + row.username_update + '</td>';
-                newRow += '<td>' + row.status_sms + '</td>';
+                newRow += '<td>' + row.status_wa + '</td>';
                 newRow += '</tr>';
 
                 // Check if tableBody is null or undefined
@@ -284,7 +284,7 @@ if (!isset ($_SESSION['access_level']) || !in_array($_SESSION['access_level'], [
         function updateStatusSMS(usernameUpdate, phoneNumber, accountNumber, callback) {
             // AJAX request to update status_sms
             var xhr = new XMLHttpRequest();
-            xhr.open("POST", "./Actions.php?a=update_status_sms", true);
+            xhr.open("POST", "./Actions.php?a=update_status_wa", true);
             xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4) {

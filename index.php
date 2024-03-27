@@ -66,6 +66,7 @@ $page = isset ($_GET['page']) ? $_GET['page'] : 'home';
                                         <hr class="dropdown-divider">
                                     </li>
                                     <li><a class="dropdown-item" href="./?page=bulk_patching_deactivate_sms">Bulking - Deactivate SMS Notif</a></li>
+                                    <li><a class="dropdown-item" href="./?page=bulk_patching_deactivate_wa">Bulking - Deactivate WA Notif</a></li>
                                 </ul>
                             </li>
                         <?php endif; ?>
