@@ -25,7 +25,7 @@ class Actions extends DBConnection
                 VALUES ('{$user_id}', '{$action_made}', '{$ip_address}', '{$user_agent}')";
             $save = $this->conn->query($sql);
             if (!$save) {
-                die ($sql . " <br> ERROR:" . $this->conn->error);
+                die($sql . " <br> ERROR:" . $this->conn->error);
             }
         }
         return true;
@@ -90,8 +90,8 @@ class Actions extends DBConnection
         // Exclude 'id' and 'password' from being updated
         $fields_to_exclude = array('id', 'password');
         foreach ($_POST as $k => $v) {
-            if (!in_array($k, $fields_to_exclude) && !empty ($v)) {
-                if (!empty ($data))
+            if (!in_array($k, $fields_to_exclude) && !empty($v)) {
+                if (!empty($data))
                     $data .= ", ";
                 $data .= " `{$k}` = '{$v}' ";
             }
@@ -99,13 +99,13 @@ class Actions extends DBConnection
 
         // Check if password is provided
         $password_hash = '';
-        if (!empty ($password)) {
+        if (!empty($password)) {
             // Convert password to MD5 hash
             $password_hash = md5($password);
             $data .= ", `password` = '{$password_hash}' ";
         }
 
-        if (empty ($id)) {
+        if (empty($id)) {
             $sql = "INSERT INTO `users` SET {$data}";
         } else {
             $sql = "UPDATE `users` SET {$data} WHERE id = '{$id}'";
@@ -115,8 +115,8 @@ class Actions extends DBConnection
         if ($save) {
             $resp['status'] = 'success';
             $log['user_id'] = $_SESSION['id'];
-            $user_id = empty ($id) ? $this->conn->insert_id : $id;
-            if (empty ($id)) {
+            $user_id = empty($id) ? $this->conn->insert_id : $id;
+            if (empty($id)) {
                 $resp['msg'] = "New User successfully added.";
                 // $log['action_made'] = " added [id={$user_id}] {$name} into the user list.";
                 $log['action_made'] = "Added new user: {$name} into the user list.";
@@ -171,10 +171,10 @@ class Actions extends DBConnection
         $where_clause = '';
 
         // Construct the WHERE clause based on filter parameters
-        if (!empty ($filter_date)) {
+        if (!empty($filter_date)) {
             $where_clause .= "AND DATE(l.date_created) = '{$filter_date}' ";
         }
-        if (!empty ($filter_username)) {
+        if (!empty($filter_username)) {
             $where_clause .= "AND u.username LIKE '%{$filter_username}%' ";
         }
 
@@ -237,7 +237,7 @@ class Actions extends DBConnection
     function update_status_sms($username_update, $phone_number, $rekening)
     {
         // Check if username_update is empty
-        if (empty ($username_update)) {
+        if (empty($username_update)) {
             // If empty, set it to the username session id
             $username_update = $_SESSION['username'];
         }
@@ -245,17 +245,17 @@ class Actions extends DBConnection
         // Update status_sms to '0' based on phone_number or rekening
         $sql = "UPDATE data_registration SET status_sms = '0', username_update = ? WHERE ";
 
-        if (!empty ($phone_number) && !empty ($rekening)) {
+        if (!empty($phone_number) && !empty($rekening)) {
             // Both phone number and account number are provided
             $sql .= "(phone_number = ? AND rekening = ?)";
             $stmt = $this->conn->prepare($sql);
             $stmt->bind_param('sss', $username_update, $phone_number, $rekening);
-        } elseif (!empty ($phone_number)) {
+        } elseif (!empty($phone_number)) {
             // Only phone number is provided
             $sql .= "phone_number = ?";
             $stmt = $this->conn->prepare($sql);
             $stmt->bind_param('ss', $username_update, $phone_number);
-        } elseif (!empty ($rekening)) {
+        } elseif (!empty($rekening)) {
             // Only account number is provided
             $sql .= "rekening = ?";
             $stmt = $this->conn->prepare($sql);
@@ -274,7 +274,7 @@ class Actions extends DBConnection
     function update_status_email($username_update, $phone_number, $rekening)
     {
         // Check if username_update is empty
-        if (empty ($username_update)) {
+        if (empty($username_update)) {
             // If empty, set it to the username session id
             $username_update = $_SESSION['username'];
         }
@@ -282,17 +282,17 @@ class Actions extends DBConnection
         // Update status_sms to '0' based on phone_number or rekening
         $sql = "UPDATE data_registration SET status_email = '0', username_update = ? WHERE ";
 
-        if (!empty ($phone_number) && !empty ($rekening)) {
+        if (!empty($phone_number) && !empty($rekening)) {
             // Both phone number and account number are provided
             $sql .= "(phone_number = ? AND rekening = ?)";
             $stmt = $this->conn->prepare($sql);
             $stmt->bind_param('sss', $username_update, $phone_number, $rekening);
-        } elseif (!empty ($phone_number)) {
+        } elseif (!empty($phone_number)) {
             // Only phone number is provided
             $sql .= "phone_number = ?";
             $stmt = $this->conn->prepare($sql);
             $stmt->bind_param('ss', $username_update, $phone_number);
-        } elseif (!empty ($rekening)) {
+        } elseif (!empty($rekening)) {
             // Only account number is provided
             $sql .= "rekening = ?";
             $stmt = $this->conn->prepare($sql);
@@ -311,7 +311,7 @@ class Actions extends DBConnection
     function update_status_wa($username_update, $phone_number, $rekening)
     {
         // Check if username_update is empty
-        if (empty ($username_update)) {
+        if (empty($username_update)) {
             // If empty, set it to the username session id
             $username_update = $_SESSION['username'];
         }
@@ -319,17 +319,17 @@ class Actions extends DBConnection
         // Update status_sms to '0' based on phone_number or rekening
         $sql = "UPDATE data_registration SET status_wa = '0', username_update = ? WHERE ";
 
-        if (!empty ($phone_number) && !empty ($rekening)) {
+        if (!empty($phone_number) && !empty($rekening)) {
             // Both phone number and account number are provided
             $sql .= "(phone_number = ? AND rekening = ?)";
             $stmt = $this->conn->prepare($sql);
             $stmt->bind_param('sss', $username_update, $phone_number, $rekening);
-        } elseif (!empty ($phone_number)) {
+        } elseif (!empty($phone_number)) {
             // Only phone number is provided
             $sql .= "phone_number = ?";
             $stmt = $this->conn->prepare($sql);
             $stmt->bind_param('ss', $username_update, $phone_number);
-        } elseif (!empty ($rekening)) {
+        } elseif (!empty($rekening)) {
             // Only account number is provided
             $sql .= "rekening = ?";
             $stmt = $this->conn->prepare($sql);
@@ -351,22 +351,22 @@ class Actions extends DBConnection
         // Construct SQL query based on search parameters
         $whereClause = '';
         $conditions = [];
-        if (!empty ($phone)) {
+        if (!empty($phone)) {
             $conditions[] = "phone_number LIKE '%$phone%'";
         }
-        if (!empty ($account)) {
+        if (!empty($account)) {
             // Replace "X" characters in account with wildcard character
             $accountForSearch = str_replace('X', '%', $account);
             $conditions[] = "rekening LIKE '%$accountForSearch%'";
         }
-        if (!empty ($email)) {
+        if (!empty($email)) {
             $conditions[] = "email LIKE '%$email%'";
         }
-        if (!empty ($conditions)) {
+        if (!empty($conditions)) {
             $whereClause = 'WHERE ' . implode(' AND ', $conditions);
         }
 
-        
+
         $sql = "SELECT * FROM data_registration $whereClause ORDER BY date_reg ASC";
 
         // Execute the query
@@ -384,13 +384,45 @@ class Actions extends DBConnection
     }
 
 
+    function search_sms_notification_bulk($phone, $account)
+    {
+        // Construct SQL query based on search parameters
+        $whereClause = '';
+        $conditions = [];
+        if (!empty($phone)) {
+            $conditions[] = "phone_number LIKE '%$phone%'";
+        }
+        if (!empty($account)) {
+            // Replace "X" characters in account with wildcard character
+            $accountForSearch = str_replace('X', '%', $account);
+            $conditions[] = "rekening LIKE '%$accountForSearch%'";
+        }
+        if (!empty($conditions)) {
+            $whereClause = 'WHERE ' . implode(' AND ', $conditions);
+        }
 
+
+        $sql = "SELECT * FROM data_registration $whereClause ORDER BY date_reg ASC";
+
+        // Execute the query
+        $result = $this->conn->query($sql);
+        if ($result) {
+            $data = [];
+            while ($row = $result->fetch_assoc()) {
+                $data[] = $row;
+            }
+            return json_encode(['status' => 'success', 'data' => $data]);
+        } else {
+            print ("Not works");
+            return json_encode(['status' => 'failed', 'message' => 'Failed to retrieve SMS notification data.']);
+        }
+    }
 
 }
 
 
 
-$a = isset ($_GET['a']) ? $_GET['a'] : '';
+$a = isset($_GET['a']) ? $_GET['a'] : '';
 $action = new Actions();
 
 switch ($a) {
@@ -427,11 +459,11 @@ switch ($a) {
         break;
     case 'search_sms_notification':
         // Assuming you have a method in your Actions class to handle the search
-        if (isset ($_GET['phone']) || isset ($_GET['account']) || isset ($_GET['email'])) {
+        if (isset($_GET['phone']) || isset($_GET['account']) || isset($_GET['email'])) {
             // Extract search parameters
-            $phone = isset ($_GET['phone']) ? $_GET['phone'] : '';
-            $account = isset ($_GET['account']) ? $_GET['account'] : '';
-            $email = isset ($_GET['email']) ? $_GET['email'] : '';
+            $phone = isset($_GET['phone']) ? $_GET['phone'] : '';
+            $account = isset($_GET['account']) ? $_GET['account'] : '';
+            $email = isset($_GET['email']) ? $_GET['email'] : '';
 
             // Call the method to search SMS notification data
             echo $action->search_sms_notification($phone, $account, $email);
@@ -440,9 +472,23 @@ switch ($a) {
             echo json_encode(['status' => 'failed', 'message' => 'Search parameters are missing.']);
         }
         break;
+    case 'search_sms_notification_bulk':
+        // Assuming you have a method in your Actions class to handle the search
+        if (isset($_GET['phone']) || isset($_GET['account']) || isset($_GET['email'])) {
+            // Extract search parameters
+            $phone = isset($_GET['phone']) ? $_GET['phone'] : '';
+            $account = isset($_GET['account']) ? $_GET['account'] : '';
+            $email = isset($_GET['email']) ? $_GET['email'] : '';
 
+            // Call the method to search SMS notification data
+            echo $action->search_sms_notification_bulk($phone, $account, $email);
+        } else {
+            // If search parameters are not provided, return an error message
+            echo json_encode(['status' => 'failed', 'message' => 'Search parameters are missing.']);
+        }
+        break;
     case 'update_status_sms':
-        if (isset ($_POST['username_update'], $_POST['phone_number'], $_POST['rekening'])) {
+        if (isset($_POST['username_update'], $_POST['phone_number'], $_POST['rekening'])) {
             $username_update = $_POST['username_update'];
             $phone_number = $_POST['phone_number'];
             $rekening = $_POST['rekening'];
@@ -452,7 +498,7 @@ switch ($a) {
         }
         break;
     case 'update_status_email':
-        if (isset ($_POST['username_update'], $_POST['phone_number'], $_POST['rekening'])) {
+        if (isset($_POST['username_update'], $_POST['phone_number'], $_POST['rekening'])) {
             $username_update = $_POST['username_update'];
             $phone_number = $_POST['phone_number'];
             $rekening = $_POST['rekening'];
@@ -462,7 +508,7 @@ switch ($a) {
         }
         break;
     case 'update_status_wa':
-        if (isset ($_POST['username_update'], $_POST['phone_number'], $_POST['rekening'])) {
+        if (isset($_POST['username_update'], $_POST['phone_number'], $_POST['rekening'])) {
             $username_update = $_POST['username_update'];
             $phone_number = $_POST['phone_number'];
             $rekening = $_POST['rekening'];
