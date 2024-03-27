@@ -45,7 +45,11 @@ if (!isset ($_SESSION['access_level']) || !in_array($_SESSION['access_level'], [
     <div class="container mt-5">
         <div class="card">
             <div class="card-body">
-                <h5 class="card-title">Upload Excel File</h5>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="card-title">Upload Excel File</h5>
+                    <a href="./downloads/sms_deac_bulk.xlsx" download class="btn btn-secondary">Download the filling
+                        template</a>
+                </div>
                 <form id="uploadForm">
                     <div class="form-group">
                         <label for="fileInput">Choose Excel File</label>
@@ -56,6 +60,7 @@ if (!isset ($_SESSION['access_level']) || !in_array($_SESSION['access_level'], [
             </div>
         </div>
     </div>
+
 
 
     <br>
@@ -74,8 +79,6 @@ if (!isset ($_SESSION['access_level']) || !in_array($_SESSION['access_level'], [
                             <th>Phone Number</th>
                             <th>Username Update</th>
                             <th>SMS Status</th>
-                            <th>Email Status</th>
-                            <th>WA Status</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -259,8 +262,6 @@ if (!isset ($_SESSION['access_level']) || !in_array($_SESSION['access_level'], [
                 newRow += '<td data-phone="' + row.phone_number + '">' + row.phone_number + '</td>';
                 newRow += '<td data-username="' + row.username_update + '">' + row.username_update + '</td>';
                 newRow += '<td>' + row.status_sms + '</td>';
-                newRow += '<td>' + row.status_email + '</td>';
-                newRow += '<td>' + row.status_wa + '</td>';
                 newRow += '</tr>';
 
                 // Check if tableBody is null or undefined
