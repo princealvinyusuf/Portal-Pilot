@@ -418,6 +418,42 @@ class Actions extends DBConnection
         }
     }
 
+    
+    function search_email_notification_bulk($email, $account, )
+    {
+        // Construct SQL query based on search parameters
+        $whereClause = '';
+        $conditions = [];
+        if (!empty($account)) {
+            // Replace "X" characters in account with wildcard character
+            $accountForSearch = str_replace('X', '%', $account);
+            $conditions[] = "rekening LIKE '%$accountForSearch%'";
+        }
+        if (!empty($email)) {
+            $conditions[] = "email LIKE '%$email%'";
+        }
+        if (!empty($conditions)) {
+            $whereClause = 'WHERE ' . implode(' AND ', $conditions);
+        }
+
+
+        $sql = "SELECT * FROM data_registration $whereClause ORDER BY date_reg ASC";
+
+        // Execute the query
+        $result = $this->conn->query($sql);
+        if ($result) {
+            $data = [];
+            while ($row = $result->fetch_assoc()) {
+                $data[] = $row;
+            }
+            return json_encode(['status' => 'success', 'data' => $data]);
+        } else {
+            print ("Not works");
+            return json_encode(['status' => 'failed', 'message' => 'Failed to retrieve SMS notification data.']);
+        }
+    }
+
+
 }
 
 
@@ -487,6 +523,21 @@ switch ($a) {
             echo json_encode(['status' => 'failed', 'message' => 'Search parameters are missing.']);
         }
         break;
+        case 'search_email_notification_bulk':
+            // Assuming you have a method in your Actions class to handle the search
+            if (isset($_GET['phone']) || isset($_GET['account']) || isset($_GET['email'])) {
+                // Extract search parameters
+                $phone = isset($_GET['phone']) ? $_GET['phone'] : '';
+                $account = isset($_GET['account']) ? $_GET['account'] : '';
+                $email = isset($_GET['email']) ? $_GET['email'] : '';
+    
+                // Call the method to search SMS notification data
+                echo $action->search_email_notification_bulk($email, $account);
+            } else {
+                // If search parameters are not provided, return an error message
+                echo json_encode(['status' => 'failed', 'message' => 'Search parameters are missing.']);
+            }
+            break;
     case 'update_status_sms':
         if (isset($_POST['username_update'], $_POST['phone_number'], $_POST['rekening'])) {
             $username_update = $_POST['username_update'];
