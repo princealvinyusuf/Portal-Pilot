@@ -356,7 +356,7 @@ class Actions extends DBConnection
         }
         if (!empty($account)) {
             // Replace "X" characters in account with wildcard character
-            $accountForSearch = str_replace('X', '%', $account);
+            $accountForSearch = str_replace('*', '%', $account);
             $conditions[] = "rekening LIKE '%$accountForSearch%'";
         }
         if (!empty($email)) {
