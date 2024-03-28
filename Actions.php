@@ -360,7 +360,7 @@ class Actions extends DBConnection
             $conditions[] = "rekening LIKE '%$accountForSearch%'";
         }
         if (!empty($email)) {
-            $conditions[] = "email LIKE '%$email%'";
+            $conditions[] = "email = '$email'";
         }
         if (!empty($conditions)) {
             $whereClause = 'WHERE ' . implode(' AND ', $conditions);
@@ -426,11 +426,11 @@ class Actions extends DBConnection
         $conditions = [];
         if (!empty($account)) {
             // Replace "X" characters in account with wildcard character
-            $accountForSearch = str_replace('X', '%', $account);
+            $accountForSearch = str_replace('*', '%', $account);
             $conditions[] = "rekening LIKE '%$accountForSearch%'";
         }
         if (!empty($email)) {
-            $conditions[] = "email LIKE '%$email%'";
+            $conditions[] = "email = '$email'";
         }
         if (!empty($conditions)) {
             $whereClause = 'WHERE ' . implode(' AND ', $conditions);
@@ -573,26 +573,3 @@ switch ($a) {
         echo "No Action given";
         break;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// DONT THROW IT AWAY
-// case 'update_status_sms':
-//     // Assuming you pass parameters through POST method
-//     $username_update = $_POST['username_update'];
-//     $phone_number = $_POST['phone_number'];
-//     $rekening = $_POST['rekening'];
-//     echo $action->update_status_sms($username_update, $phone_number, $rekening);
-//     break;
