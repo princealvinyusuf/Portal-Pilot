@@ -52,8 +52,30 @@
             <div class="col-md-4">
                 <div class="card mb-4">
                     <div class="card-body">
-                        <h6 class="card-title" style="font-weight: bold;">Menu Bulking SMS Notifikasi</h6>
+                        <h6 class="card-title" style="font-weight: bold;">Menu Bulk SMS Notifikasi</h6>
                         <button type="button" class="btn btn-primary" onclick="saveLogAndRedirect(4)">Access</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h6 class="card-title" style="font-weight: bold;">Menu Bulk EMail Notifikasi</h6>
+                        <button type="button" class="btn btn-primary" onclick="saveLogAndRedirect(5)">Access</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h6 class="card-title" style="font-weight: bold;">Menu Bulk WA Notifikasi</h6>
+                        <button type="button" class="btn btn-primary" onclick="saveLogAndRedirect(6)">Access</button>
                     </div>
                 </div>
             </div>
@@ -102,9 +124,16 @@
                 break;
             case 4:
                 window.location.href = './?page=bulk_patching_deactivate_sms';
-                saveLog('User Accessing Menu: Bulking Deaktivasi SMS Notifikasi');
+                saveLog('User Accessing Menu: Bulk Deaktivasi SMS Notifikasi');
                 break;
-
+            case 5:
+                window.location.href = './?page=bulk_patching_deactivate_email';
+                saveLog('User Accessing Menu: Bulk Deaktivasi Email Notifikasi');
+                break;
+            case 6:
+                window.location.href = './?page=bulk_patching_deactivate_wa';
+                saveLog('User Accessing Menu: Bulk Deaktivasi WA Notifikasi');
+                break;
             default:
                 // Default redirection if number doesn't match any case
                 window.location.href = './';
