@@ -1,7 +1,7 @@
 <?php
 
 // Check if the user is logged in
-if (!isset ($_SESSION['id']) || $_SESSION['id'] <= 0) {
+if (!isset($_SESSION['id']) || $_SESSION['id'] <= 0) {
     header("Location: ./login.php");
     exit;
 }
@@ -31,6 +31,11 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
         border-radius: 10px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
         display: none;
+
+    }
+
+    .grayText {
+        color: gray;
     }
 </style>
 
@@ -46,13 +51,13 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group mb-3">
-                        <label for="phone">Phone Number</label>
+                        <label for="phone">Phone Number* <span class="grayText">(ex: 0812)</span></label>
                         <input type="text" class="form-control" id="phone" placeholder="Enter phone number">
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group mb-3">
-                        <label for="account">Account Number</label>
+                        <label for="account">Account Number*</label>
                         <input type="text" class="form-control" id="account" placeholder="Enter account number">
                     </div>
                 </div>
@@ -247,7 +252,18 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
 
             // Check if any of the fields are empty
             if (phone === "" && account === "" && email === "") {
-                alert("Please enter the required information in one of the columns provided.");
+                alert("Please enter the both required information");
+                return;
+            }
+
+            // Check if any of the fields are empty
+            if (phone === "") {
+                alert("Please enter the phone number.");
+                return;
+            } 
+
+            if (account === "") {
+                alert("Please enter the account number.");
                 return;
             }
 
