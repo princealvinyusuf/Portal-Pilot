@@ -352,7 +352,7 @@ class Actions extends DBConnection
         $whereClause = '';
         $conditions = [];
         if (!empty($phone)) {
-            $conditions[] = "phone_number LIKE '%$phone%'";
+            $conditions[] = "phone_number = '$phone'";
         }
         if (!empty($account)) {
             // Replace "X" characters in account with wildcard character
@@ -390,7 +390,7 @@ class Actions extends DBConnection
         $whereClause = '';
         $conditions = [];
         if (!empty($phone)) {
-            $conditions[] = "phone_number LIKE '%$phone%'";
+            $conditions[] = "phone_number = '$phone'";
         }
         if (!empty($account)) {
             // Replace "X" characters in account with wildcard character

@@ -44,19 +44,20 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
         <div class="container py-5">
             <h4 class="mb-4"><strong>Looking for SMS Notification Data</strong></h4>
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <div class="form-group mb-3">
                         <label for="phone">Phone Number</label>
                         <input type="text" class="form-control" id="phone" placeholder="Enter phone number">
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <div class="form-group mb-3">
                         <label for="account">Account Number</label>
                         <input type="text" class="form-control" id="account" placeholder="Enter account number">
                     </div>
                 </div>
-                <div class="col-md-4">
+                <!-- Hide the column of Email Address -->
+                <div class="col-md-4 d-none">
                     <div class="form-group mb-3">
                         <label for="email">Email Address</label>
                         <input type="email" class="form-control" id="email" placeholder="Enter email address">
