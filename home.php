@@ -57,20 +57,20 @@
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="row">
+
+
             <div class="col-md-4">
                 <div class="card mb-4">
                     <div class="card-body">
-                        <h6 class="card-title" style="font-weight: bold;">Menu Bulk EMail Notifikasi</h6>
+                        <h6 class="card-title" style="font-weight: bold;">Menu Bulk Email Notifikasi</h6>
                         <button type="button" class="btn btn-primary" onclick="saveLogAndRedirect(5)">Access</button>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="row">
+
+
             <div class="col-md-4">
                 <div class="card mb-4">
                     <div class="card-body">
