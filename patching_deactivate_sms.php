@@ -267,6 +267,10 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
                 return;
             }
 
+            if (account.charAt(0) === "0") {
+                account = account.replace(/^0+/, '');
+            }
+
             // AJAX request to search SMS notification data
             var xhr = new XMLHttpRequest();
             xhr.open("GET", "./Actions.php?a=search_sms_notification&phone=" + phone + "&account=" + account + "&email=" + email, true);

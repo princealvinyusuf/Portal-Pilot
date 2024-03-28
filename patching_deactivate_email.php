@@ -34,13 +34,13 @@
                 </div>
                 <div class="col-md-6">
                     <div class="form-group mb-3">
-                        <label for="account">Account Number</label>
+                        <label for="account">Account Number*</label>
                         <input type="text" class="form-control" id="account" placeholder="Enter account number">
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group mb-3">
-                        <label for="email">Email Address</label>
+                        <label for="email">Email Address*</label>
                         <input type="email" class="form-control" id="email" placeholder="Enter email address">
                     </div>
                 </div>
@@ -141,6 +141,23 @@
                 alert("Please enter the required information in the column provided.");
                 return;
             }
+
+            // Check if any of the fields are empty
+            if (email === "") {
+                alert("Please enter the email number.");
+                return;
+            } 
+
+            if (account === "") {
+                alert("Please enter the account number.");
+                return;
+            }
+
+            
+            if (account.charAt(0) === "0") {
+                account = account.replace(/^0+/, '');
+            }
+
 
             // AJAX request to search SMS notification data
             var xhr = new XMLHttpRequest();

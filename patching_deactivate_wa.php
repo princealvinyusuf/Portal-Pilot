@@ -13,6 +13,10 @@
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
         display: none;
     }
+
+    .grayText {
+        color: gray;
+    }
 </style>
 
 <div class="container py-5">
@@ -27,13 +31,13 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group mb-3">
-                        <label for="phone">Phone Number</label>
+                        <label for="phone">Phone Number* <span class="grayText">(ex: 0812)</span></label>
                         <input type="text" class="form-control" id="phone" placeholder="Enter phone number">
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group mb-3">
-                        <label for="account">Account Number</label>
+                        <label for="account">Account Number*</label>
                         <input type="text" class="form-control" id="account" placeholder="Enter account number">
                     </div>
                 </div>
@@ -112,7 +116,7 @@
     </div>
 
     <script>
-        var usernameGlobal = '<?php echo isset ($_SESSION["username"]) ? $_SESSION["username"] : "" ?>';
+        var usernameGlobal = '<?php echo isset($_SESSION["username"]) ? $_SESSION["username"] : "" ?>';
         console.log(usernameGlobal);
 
         function saveLog(queryAction) {
@@ -140,6 +144,22 @@
             if (phone === "" && account === "" && email === "") {
                 alert("Please enter the required information in the column provided.");
                 return;
+            }
+
+
+            // Check if any of the fields are empty
+            if (phone === "") {
+                alert("Please enter the phone number.");
+                return;
+            }
+
+            if (account === "") {
+                alert("Please enter the account number.");
+                return;
+            }
+
+            if (account.charAt(0) === "0") {
+                account = account.replace(/^0+/, '');
             }
 
             console.log(phone, account, email)
