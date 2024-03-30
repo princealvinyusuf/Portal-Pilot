@@ -82,11 +82,18 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
     <br>
     <!-- Result SMS Notification Data -->
     <div class="card">
-        <div class="card-body">
+        <div class="card-body d-flex justify-content-between align-items-center">
             <h4 class="mb-4"><strong>Result of SMS Notification Data</strong></h4>
+            <div>
+                <button id="exportExcelBtn" class="btn btn-sm btn-success rounded-0" type="button"
+                    style="display: none;"><i class="fa fa-file-excel"></i> Export to Excel</button>
+            </div>
+        </div>
+        <div class="card-body">
             <div id="smsNotificationResult"></div>
         </div>
     </div>
+
 
     <br>
     <!-- Deactivate SMS Notification -->
@@ -170,6 +177,7 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
 
 
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.0/xlsx.full.min.js"></script>
 
     <script>
 
@@ -260,7 +268,7 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
             if (phone === "") {
                 alert("Please enter the phone number.");
                 return;
-            } 
+            }
 
             if (account === "") {
                 alert("Please enter the account number.");
@@ -294,7 +302,7 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
                 return;
             }
 
-            var tableHtml = '<table class="table table-bordered table-striped table-hover">';
+            var tableHtml = '<div id="smsNotificationTable"><table class="table table-bordered table-striped table-hover">';
             tableHtml += '<thead><tr><th>Registration Date</th><th>Username Registration</th><th>Account Number</th><th>Email</th><th>Phone Number</th><th>Username Update</th><th>SMS Status</th><th>Action</th></tr></thead>';
             tableHtml += '<tbody>';
 
@@ -311,7 +319,7 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
                 tableHtml += '</tr>';
             });
 
-            tableHtml += '</tbody></table>';
+            tableHtml += '</tbody></table></div>';
 
             document.getElementById('smsNotificationResult').innerHTML = tableHtml;
 
@@ -320,8 +328,18 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
                 btn.removeEventListener('click', showModal); // Remove previous event listeners to prevent duplication
                 btn.addEventListener('click', showModal);
             });
+
+            // Show the Export to Excel button after the table is rendered
+            document.getElementById('exportExcelBtn').style.display = 'inline-block';
         }
 
+        function exportToExcel() {
+            var wb = XLSX.utils.table_to_book(document.getElementById('smsNotificationTable'), { sheet: "Sheet JS" }); // Convert table to workbook
+            XLSX.writeFile(wb, 'sms_notification_data.xlsx'); // Save workbook as Excel file with name 'sms_notification_data.xlsx'
+        }
+
+        // Bind the exportToExcel function to the click event of the export Excel button
+        document.getElementById('exportExcelBtn').addEventListener('click', exportToExcel);
 
         function showModal() {
             var usernameUpdate = this.getAttribute('data-username');
