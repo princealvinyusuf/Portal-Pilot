@@ -57,17 +57,24 @@
     </div>
 
     <br>
-    <!-- Result SMS Notification Data -->
+    <!-- Result Email Notification Data -->
     <div class="card">
-        <div class="card-body">
+        <div class="card-body d-flex justify-content-between align-items-center">
             <h4 class="mb-4"><strong>Result of Email Notification Data</strong></h4>
+            <div>
+                <button id="exportExcelBtn" class="btn btn-sm btn-success rounded-0" type="button"
+                    style="display: none;"><i class="fa fa-file-excel"></i> Export to Excel</button>
+            </div>
+        </div>
+        <div class="card-body">
             <div id="smsNotificationResult"></div>
         </div>
     </div>
 
+
     <br>
 
-    
+
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -111,8 +118,12 @@
         <p>The Email notification has been successfully updated.</p>
     </div>
 
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.0/xlsx.full.min.js"></script>
+
+
     <script>
-        var usernameGlobal = '<?php echo isset ($_SESSION["username"]) ? $_SESSION["username"] : "" ?>';
+        var usernameGlobal = '<?php echo isset($_SESSION["username"]) ? $_SESSION["username"] : "" ?>';
         console.log(usernameGlobal);
 
         function saveLog(queryAction) {
@@ -146,14 +157,14 @@
             if (email === "") {
                 alert("Please enter the email number.");
                 return;
-            } 
+            }
 
             if (account === "") {
                 alert("Please enter the account number.");
                 return;
             }
 
-            
+
             if (account.charAt(0) === "0") {
                 account = account.replace(/^0+/, '');
             }
@@ -208,7 +219,19 @@
                 btn.removeEventListener('click', showModal); // Remove previous event listeners to prevent duplication
                 btn.addEventListener('click', showModal);
             });
+
+            // Show the Export to Excel button after the table is rendered
+            document.getElementById('exportExcelBtn').style.display = 'inline-block';
         }
+
+        function exportToExcel() {
+            var wb = XLSX.utils.table_to_book(document.getElementById('smsNotificationResult'), { sheet: "Sheet JS" }); // Convert table to workbook
+            XLSX.writeFile(wb, 'email_notification_data.xlsx'); // Save workbook as Excel file with name 'email_notification_data.xlsx'
+        }
+
+        // Bind the exportToExcel function to the click event of the export Excel button
+        document.getElementById('exportExcelBtn').addEventListener('click', exportToExcel);
+
 
         function showModal() {
             var usernameUpdate = this.getAttribute('data-username');
