@@ -67,7 +67,7 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
 
 
     <br>
-    <!-- Result SMS Notification Data -->
+    <!-- Result Email Notification Data -->
     <div class="card">
         <div class="card-body">
             <h4 class="mb-4"><strong>Result of Email Notification Data</strong></h4>
