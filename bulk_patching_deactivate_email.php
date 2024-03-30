@@ -1,13 +1,13 @@
 <?php
 
 // Check if the user is logged in
-if (!isset ($_SESSION['id']) || $_SESSION['id'] <= 0) {
+if (!isset($_SESSION['id']) || $_SESSION['id'] <= 0) {
     header("Location: ./login.php");
     exit;
 }
 
 // Check user access level
-if (!isset ($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['Administrator', 'Engineer'])) {
+if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['Administrator', 'Engineer'])) {
     // Display the unauthorized message
     echo '<p style="font-weight: bold; font-size: 18px; text-align: center;">Unauthorized User</p>';
     // Optionally, you may want to include additional HTML or redirect the user
@@ -33,6 +33,10 @@ if (!isset ($_SESSION['access_level']) || !in_array($_SESSION['access_level'], [
         display: none;
     }
 </style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    integrity="sha512-Lbi5sAXP9s79y+8OoZweWwYGfAkBhqVl0V83BL3WVdRQnKIo/zJ7T8iGYHzswkpsGvVD3svFVupgMZ38LqyWXw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+
 
 <div class="container py-5">
     <div class="d-flex w-100">
@@ -67,6 +71,11 @@ if (!isset ($_SESSION['access_level']) || !in_array($_SESSION['access_level'], [
     <div class="card">
         <div class="card-body">
             <h4 class="mb-4"><strong>Result of Email Notification Data</strong></h4>
+            <button id="exportExcelBtn" class="btn btn-success"
+                style="float: right; margin-top: 10px; margin-bottom: 10px; display: none;">
+                <i class="fas fa-file-excel"></i> Export to Excel
+            </button>
+
             <div id="smsNotificationResult">
                 <table class="table table-bordered table-striped table-hover">
                     <thead>
@@ -84,12 +93,14 @@ if (!isset ($_SESSION['access_level']) || !in_array($_SESSION['access_level'], [
                         <!-- Table body content will be appended here -->
                     </tbody>
                 </table>
+                <!-- Button to execute all patching process -->
+                <button id="executePatchingBtn" class="btn btn-success" style="display: none;">Execute all patching
+                    process
+                    now</button>
             </div>
-            <!-- Button to execute all patching process -->
-            <button id="executePatchingBtn" class="btn btn-success" style="display: none;">Execute all patching process
-                now</button>
         </div>
     </div>
+
 
 
     <br>
@@ -229,7 +240,6 @@ if (!isset ($_SESSION['access_level']) || !in_array($_SESSION['access_level'], [
 
         }
 
-
         function displaySMSNotificationResult(data) {
             if (!data || data.length === 0) {
                 console.log("No data to display.");
@@ -276,8 +286,35 @@ if (!isset ($_SESSION['access_level']) || !in_array($_SESSION['access_level'], [
             } else {
                 console.error("Button with ID 'executePatchingBtn' not found.");
             }
+
+            // Create Export to Excel button
+            var exportExcelBtn = document.createElement('button');
+            exportExcelBtn.id = 'exportExcelBtn';
+            exportExcelBtn.className = 'btn btn-success';
+            exportExcelBtn.style.float = 'right';
+            exportExcelBtn.style.marginTop = '10px';
+            exportExcelBtn.style.display = 'none';
+            exportExcelBtn.innerHTML = '<i class="fas fa-file-excel"></i> Export to Excel';
+            exportExcelBtn.addEventListener('click', exportToExcel);
+
+            // Show the export button
+            var exportExcelBtn = document.getElementById('exportExcelBtn');
+            if (exportExcelBtn) {
+                exportExcelBtn.style.display = 'block';
+            } else {
+                console.error("Export button not found.");
+            }
         }
 
+        function exportToExcel() {
+            var wb = XLSX.utils.table_to_book(document.getElementById('smsNotificationResult').getElementsByTagName('table')[0], { sheet: "Sheet JS" }); // Convert table to workbook
+            XLSX.writeFile(wb, 'email_notification_data.xlsx'); // Save workbook as Excel file with name 'email_notification_data.xlsx'
+        }
+
+        // Bind the exportToExcel function to the click event of the export Excel button
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('exportExcelBtn').addEventListener('click', exportToExcel);
+        });
 
 
         function updateStatusSMS(usernameUpdate, phoneNumber, accountNumber, callback) {
