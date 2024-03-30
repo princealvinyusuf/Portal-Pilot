@@ -63,10 +63,15 @@ if (!isset ($_SESSION['access_level']) || !in_array($_SESSION['access_level'], [
 
 
     <br>
-    <!-- Result SMS Notification Data -->
+    <!-- Result WA Notification Data -->
     <div class="card">
         <div class="card-body">
             <h4 class="mb-4"><strong>Result of WA Notification Data</strong></h4>
+            <button id="exportExcelBtn" class="btn btn-success"
+                style="float: right; margin-top: 10px; margin-bottom: 10px; display: none;">
+                <i class="fas fa-file-excel"></i> Export to Excel
+            </button>
+
             <div id="smsNotificationResult">
                 <table class="table table-bordered table-striped table-hover">
                     <thead>
@@ -84,12 +89,15 @@ if (!isset ($_SESSION['access_level']) || !in_array($_SESSION['access_level'], [
                         <!-- Table body content will be appended here -->
                     </tbody>
                 </table>
+                <!-- Button to execute all patching process -->
+                <button id="executePatchingBtn" class="btn btn-success" style="display: none;">Execute all patching
+                    process
+                    now</button>
             </div>
-            <!-- Button to execute all patching process -->
-            <button id="executePatchingBtn" class="btn btn-success" style="display: none;">Execute all patching process
-                now</button>
         </div>
     </div>
+
+
 
 
     <br>
@@ -228,7 +236,7 @@ if (!isset ($_SESSION['access_level']) || !in_array($_SESSION['access_level'], [
             xhr.send("a=save_log&user_id=<?php echo $_SESSION['id']; ?>&action_made=" + queryAction);
 
         }
-
+        
 
         function displaySMSNotificationResult(data) {
             if (!data || data.length === 0) {
@@ -276,7 +284,35 @@ if (!isset ($_SESSION['access_level']) || !in_array($_SESSION['access_level'], [
             } else {
                 console.error("Button with ID 'executePatchingBtn' not found.");
             }
+
+            // Create Export to Excel button
+            var exportExcelBtn = document.createElement('button');
+            exportExcelBtn.id = 'exportExcelBtn';
+            exportExcelBtn.className = 'btn btn-success';
+            exportExcelBtn.style.float = 'right';
+            exportExcelBtn.style.marginTop = '10px';
+            exportExcelBtn.style.display = 'none';
+            exportExcelBtn.innerHTML = '<i class="fas fa-file-excel"></i> Export to Excel';
+            exportExcelBtn.addEventListener('click', exportToExcel);
+
+            // Show the export button
+            var exportExcelBtn = document.getElementById('exportExcelBtn');
+            if (exportExcelBtn) {
+                exportExcelBtn.style.display = 'block';
+            } else {
+                console.error("Export button not found.");
+            }
         }
+
+        function exportToExcel() {
+            var wb = XLSX.utils.table_to_book(document.getElementById('smsNotificationResult').getElementsByTagName('table')[0], { sheet: "Sheet JS" }); // Convert table to workbook
+            XLSX.writeFile(wb, 'wa_notification_data.xlsx'); // Save workbook as Excel file with name 'email_notification_data.xlsx'
+        }
+
+        // Bind the exportToExcel function to the click event of the export Excel button
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('exportExcelBtn').addEventListener('click', exportToExcel);
+        });
 
 
 
