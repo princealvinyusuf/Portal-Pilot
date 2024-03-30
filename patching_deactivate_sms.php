@@ -323,15 +323,24 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
 
             document.getElementById('smsNotificationResult').innerHTML = tableHtml;
 
-            // Add event listener to "Run" buttons
-            document.querySelectorAll('.run_sms').forEach(function (btn) {
-                btn.removeEventListener('click', showModal); // Remove previous event listeners to prevent duplication
-                btn.addEventListener('click', showModal);
+            // Disable Patch buttons where status_sms is 0
+            var buttons = document.querySelectorAll('.run_sms');
+            buttons.forEach(function (button) {
+                var status_sms = button.parentElement.previousElementSibling.textContent;
+                if (status_sms === '0') {
+                    button.disabled = true;
+                }
+                if (status_sms === '1') {
+                    button.removeEventListener('click', showModal); // Remove previous event listeners to prevent duplication
+                    button.addEventListener('click', showModal);
+                }
             });
 
             // Show the Export to Excel button after the table is rendered
             document.getElementById('exportExcelBtn').style.display = 'inline-block';
         }
+
+
 
         function exportToExcel() {
             var wb = XLSX.utils.table_to_book(document.getElementById('smsNotificationTable'), { sheet: "Sheet JS" }); // Convert table to workbook
