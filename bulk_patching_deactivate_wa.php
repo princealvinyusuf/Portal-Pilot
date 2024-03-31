@@ -36,7 +36,7 @@ if (!isset ($_SESSION['access_level']) || !in_array($_SESSION['access_level'], [
 
 <div class="container py-5">
     <div class="d-flex w-100">
-        <h3 class="col-auto flex-grow-1"><b>Patching - Bulking WA Notifikasi</b></h3>
+        <h3 class="col-auto flex-grow-1"><b>Patching - Bulk WA Notifikasi</b></h3>
     </div>
     <hr>
 
