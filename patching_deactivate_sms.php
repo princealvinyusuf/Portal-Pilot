@@ -142,12 +142,18 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Patching this data?</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Are you sure to patch this data?</h5>
                 </div>
                 <div class="modal-body">
                     <div class="container-fluid">
                         <form action="" id="user-form">
                             <input type="hidden" name="id" value="">
+                            <div class="form-group">
+                                <label for="textWarn" class="control-label"><strong>Here's the information of the data
+                                        that you want to patch the SMS Status to be 0</strong></label>
+                                <br>
+                                <br>
+                            </div>
                             <div class="form-group">
                                 <label for="phone_number" class="control-label">Phone Number</label>
                                 <input type="text" name="phone_number" class="form-control form-control-sm rounded-0"
@@ -168,8 +174,8 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="saveChangesBtn">Process</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                    <button type="button" class="btn btn-primary" id="saveChangesBtn">Yes</button>
                 </div>
             </div>
         </div>
@@ -351,17 +357,28 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
         document.getElementById('exportExcelBtn').addEventListener('click', exportToExcel);
 
         function showModal() {
-            var usernameUpdate = this.getAttribute('data-username');
             var phoneNumber = this.getAttribute('data-phone');
-            var rekening = this.getAttribute('data-rekening');
+            var accountNumber = this.getAttribute('data-rekening');
+
+            // Show alert to input usernameUpdate
+            var usernameUpdate = prompt("Enter Username Update:");
+            if (usernameUpdate === null || usernameUpdate.trim() === '') {
+                return; // Stop further execution if usernameUpdate is empty or null
+            }
 
             // Populate modal fields with data from the row
             document.querySelector('#myModal input[name="phone_number"]').value = phoneNumber;
-            document.querySelector('#myModal input[name="account_number"]').value = rekening;
+            document.querySelector('#myModal input[name="account_number"]').value = accountNumber;
+            document.querySelector('#myModal input[name="username_update"]').value = usernameUpdate;
+            // Disable input fields
+            document.querySelector('#myModal input[name="username_update"]').readOnly = true;
+            document.querySelector('#myModal input[name="phone_number"]').readOnly = true;
+            document.querySelector('#myModal input[name="account_number"]').readOnly = true;
 
             // Show the modal
             $('#myModal').modal('show');
         }
+
 
         // Handle Ok button click inside the modal
         // Handle Ok button click inside the modal
