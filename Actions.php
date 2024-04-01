@@ -280,22 +280,22 @@ class Actions extends DBConnection
             $username_update = $_SESSION['username'];
         }
 
-        // Update status_sms to '0' based on phone_number or rekening
-        $sql = "UPDATE data_registration SET status_email = '0', username_update = ? WHERE ";
+        // Update status_email to '0' based on phone_number or rekening
+        $sql = "UPDATE data_registration SET status_email = '0', username_update = ? WHERE status_email = 1 ";
 
         if (!empty($phone_number) && !empty($rekening)) {
             // Both phone number and account number are provided
-            $sql .= "(phone_number = ? AND rekening = ?)";
+            $sql .= "AND (phone_number = ? AND rekening = ?)";
             $stmt = $this->conn->prepare($sql);
             $stmt->bind_param('sss', $username_update, $phone_number, $rekening);
         } elseif (!empty($phone_number)) {
             // Only phone number is provided
-            $sql .= "phone_number = ?";
+            $sql .= "AND phone_number = ?";
             $stmt = $this->conn->prepare($sql);
             $stmt->bind_param('ss', $username_update, $phone_number);
         } elseif (!empty($rekening)) {
             // Only account number is provided
-            $sql .= "rekening = ?";
+            $sql .= "AND rekening = ?";
             $stmt = $this->conn->prepare($sql);
             $stmt->bind_param('ss', $username_update, $rekening);
         }
@@ -308,6 +308,7 @@ class Actions extends DBConnection
             return json_encode(['status' => 'failed', 'message' => 'Failed to update status Email.']);
         }
     }
+
 
     function update_status_wa($username_update, $phone_number, $rekening)
     {
@@ -317,22 +318,22 @@ class Actions extends DBConnection
             $username_update = $_SESSION['username'];
         }
 
-        // Update status_sms to '0' based on phone_number or rekening
-        $sql = "UPDATE data_registration SET status_wa = '0', username_update = ? WHERE ";
+        // Update status_wa to '0' based on phone_number or rekening
+        $sql = "UPDATE data_registration SET status_wa = '0', username_update = ? WHERE status_wa = 1 ";
 
         if (!empty($phone_number) && !empty($rekening)) {
             // Both phone number and account number are provided
-            $sql .= "(phone_number = ? AND rekening = ?)";
+            $sql .= "AND (phone_number = ? AND rekening = ?)";
             $stmt = $this->conn->prepare($sql);
             $stmt->bind_param('sss', $username_update, $phone_number, $rekening);
         } elseif (!empty($phone_number)) {
             // Only phone number is provided
-            $sql .= "phone_number = ?";
+            $sql .= "AND phone_number = ?";
             $stmt = $this->conn->prepare($sql);
             $stmt->bind_param('ss', $username_update, $phone_number);
         } elseif (!empty($rekening)) {
             // Only account number is provided
-            $sql .= "rekening = ?";
+            $sql .= "AND rekening = ?";
             $stmt = $this->conn->prepare($sql);
             $stmt->bind_param('ss', $username_update, $rekening);
         }
@@ -340,11 +341,12 @@ class Actions extends DBConnection
         $result = $stmt->execute();
 
         if ($result) {
-            return json_encode(['status' => 'success', 'message' => 'Status Email updated successfully.']);
+            return json_encode(['status' => 'success', 'message' => 'Status WhatsApp updated successfully.']);
         } else {
-            return json_encode(['status' => 'failed', 'message' => 'Failed to update status Email.']);
+            return json_encode(['status' => 'failed', 'message' => 'Failed to update status WhatsApp.']);
         }
     }
+
 
 
     function search_sms_notification($phone, $account, $email)
