@@ -113,6 +113,10 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
 
     <script>
 
+        var ajaxRequestsCount = 0; // Variable to count the number of AJAX requests made
+        var ajaxResponsesCount = 0; // Variable to count the number of AJAX responses received
+
+
         document.getElementById('uploadForm').addEventListener('submit', function (event) {
             event.preventDefault(); // Prevent form submission
 
@@ -144,9 +148,6 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
             tableBody.innerHTML = '';
         }
 
-
-        var ajaxRequestsCount = 0; // Variable to count the number of AJAX requests made
-        var ajaxResponsesCount = 0; // Variable to count the number of AJAX responses received
 
         function processData(data) {
             // Reset counts for new data
