@@ -367,7 +367,7 @@
 
         function searchAndSave() {
             // Call saveLog function
-            saveLog('User Searching: Email Notification Data: ' + document.getElementById('phone').value + ' ' + document.getElementById('account').value + ' ' + document.getElementById('email').value);
+            saveLog('User Searching: Email Notification Data: ' + 'account number: ' + document.getElementById('account').value + ' ' + 'email address: ' + document.getElementById('email').value);
 
             // Call searchSMSNotification function
             searchSMSNotification();

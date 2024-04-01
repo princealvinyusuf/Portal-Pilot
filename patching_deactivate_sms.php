@@ -473,7 +473,7 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
 
         function searchAndSave() {
             // Call saveLog function
-            saveLog('User Searching - SMS Notification Data: ' + 'phone number:' + ' ' + document.getElementById('phone').value + ' account number:' + document.getElementById('account').value + ' email address:' + document.getElementById('email').value);
+            saveLog('User Searching - SMS Notification Data: ' + 'phone number:' + ' ' + document.getElementById('phone').value + ' account number:' + document.getElementById('account').value);
 
             // Call searchSMSNotification function
             searchSMSNotification();

@@ -370,7 +370,7 @@
 
         function searchAndSave() {
             // Call saveLog function
-            saveLog('User Searching: WA Notification Data: ' + document.getElementById('phone').value + ' ' + document.getElementById('account').value + ' ' + document.getElementById('email').value);
+            saveLog('User Searching: WA Notification Data: ' + 'phone number:' + ' ' + document.getElementById('phone').value + ' account number:' + document.getElementById('account').value);
 
             // Call searchSMSNotification function
             searchSMSNotification();
