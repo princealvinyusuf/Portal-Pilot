@@ -143,7 +143,14 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
         }
 
 
+        var ajaxRequestsCount = 0; // Variable to count the number of AJAX requests made
+        var ajaxResponsesCount = 0; // Variable to count the number of AJAX responses received
+
         function processData(data) {
+            // Reset counts for new data
+            ajaxRequestsCount = 0;
+            ajaxResponsesCount = 0;
+
             // Assuming each row of data has columns in the order: phone number, account number
             for (var i = 1; i < data.length; i++) { // Start from index 1 to skip header row
                 var phoneNumber = data[i][0];
@@ -160,7 +167,6 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
                 // Call searchSMSNotification with current row data
                 searchSMSNotification(phoneNumber, accountNumber);
             }
-
         }
 
 
@@ -204,6 +210,9 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
                 return;
             }
 
+            // Increment the count of AJAX requests made
+            ajaxRequestsCount++;
+
             // AJAX request  to search SMS notification data
             var xhr = new XMLHttpRequest();
             xhr.open("GET", "./Actions.php?a=search_sms_notification_bulk&phone=" + phone + "&account=" + account, true);
@@ -212,6 +221,14 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
                     var response = JSON.parse(xhr.responseText);
                     if (response.status === 'success') {
                         displaySMSNotificationResult(response.data);
+
+                        // Increment the count of AJAX responses received
+                        ajaxResponsesCount++;
+
+                        // If all AJAX requests have been completed, call countAndLogTotalRows()
+                        if (ajaxResponsesCount === ajaxRequestsCount) {
+                            countAndLogTotalRows();
+                        }
                     } else {
                         alert("Failed to retrieve SMS notification data.");
                     }
@@ -219,7 +236,6 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
             };
             xhr.send();
         }
-
 
         function saveLog(queryAction) {
             // AJAX request to save_log before submitting the form
@@ -295,12 +311,17 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
             exportExcelBtn.addEventListener('click', exportToExcel);
 
             // Show the export button
-            var exportExcelBtn = document.getElementById('exportExcelBtn');
-            if (exportExcelBtn) {
-                exportExcelBtn.style.display = 'block';
+            var exportExcelBtnElement = document.getElementById('exportExcelBtn');
+            if (exportExcelBtnElement) {
+                exportExcelBtnElement.style.display = 'block';
             } else {
                 console.error("Export button not found.");
             }
+        }
+
+        function countAndLogTotalRows() {
+            var rowCount = document.querySelectorAll('#smsNotificationResult table tbody tr').length;
+            console.log("Total rows displayed: " + rowCount);
         }
 
         function exportToExcel() {
