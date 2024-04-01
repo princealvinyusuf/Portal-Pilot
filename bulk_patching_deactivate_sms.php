@@ -71,7 +71,7 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
                 style="float: right; margin-top: 10px; margin-bottom: 10px; display: none;">
                 <i class="fas fa-file-excel"></i> Export to Excel
             </button>
-            Total row display: <span id="totalRowCount">0</span>
+            <!-- Total row display: <span id="totalRowCount">0</span> -->
 
             <div id="smsNotificationResult">
                 <table class="table table-bordered table-striped table-hover">
