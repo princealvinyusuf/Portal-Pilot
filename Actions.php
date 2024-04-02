@@ -373,7 +373,7 @@ class Actions extends DBConnection
         $sql = "SELECT * FROM data_registration $whereClause ORDER BY date_reg ASC";
 
         // Execute the query
-        $result = $this->conn->query($sql);
+        $result = $this->conn2->query($sql);
         if ($result) {
             $data = [];
             while ($row = $result->fetch_assoc()) {
