@@ -1,13 +1,13 @@
 <?php
 
 // Check if the user is logged in
-if (!isset ($_SESSION['id']) || $_SESSION['id'] <= 0) {
+if (!isset($_SESSION['id']) || $_SESSION['id'] <= 0) {
     header("Location: ./login.php");
     exit;
 }
 
 // Check user access level
-if (!isset ($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['Administrator', 'Engineer'])) {
+if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['Administrator', 'Engineer'])) {
     // Display the unauthorized message
     echo '<p style="font-weight: bold; font-size: 18px; text-align: center;">Unauthorized User</p>';
     // Optionally, you may want to include additional HTML or redirect the user
@@ -122,6 +122,12 @@ if (!isset ($_SESSION['access_level']) || !in_array($_SESSION['access_level'], [
             var file = fileInput.files[0];
 
             if (file) {
+                // Check file size
+                if (file.size > 15000) { // 15KB = 15000 bytes
+                    alert('File size exceeds 15KB. Please upload a smaller file.');
+                    return; // Exit function
+                }
+
                 var reader = new FileReader();
                 reader.onload = function (e) {
                     var data = new Uint8Array(e.target.result);
@@ -130,12 +136,30 @@ if (!isset ($_SESSION['access_level']) || !in_array($_SESSION['access_level'], [
                     var worksheet = workbook.Sheets[sheetName];
                     var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
 
+                    // Filter out empty rows
+                    var nonEmptyRows = jsonData.filter(function (row) {
+                        return Object.keys(row).length > 0;
+                    });
+
+                    // Check if the row count of non-empty rows exceeds 50
+                    if (nonEmptyRows.length > 51) {
+                        alert('Row count exceeds 50. Please upload a file with fewer rows.');
+                        return; // Exit function
+                    }
+
                     // Process the data
                     processData(jsonData);
+
+                    // Close the workbook
+                    workbook = null; // or workbook = undefined;
+
+                    // Reset jsonData for next file upload
+                    jsonData = null;
                 };
                 reader.readAsArrayBuffer(file);
             }
         });
+
 
         function clearTable() {
             // Clear the table content
@@ -236,7 +260,7 @@ if (!isset ($_SESSION['access_level']) || !in_array($_SESSION['access_level'], [
             xhr.send("a=save_log&user_id=<?php echo $_SESSION['id']; ?>&action_made=" + queryAction);
 
         }
-        
+
 
         function displaySMSNotificationResult(data) {
             if (!data || data.length === 0) {
