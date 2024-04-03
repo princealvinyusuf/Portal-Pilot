@@ -243,7 +243,7 @@ class Actions extends DBConnection
         }
 
         // Update status_sms to '0' based on phone_number or rekening
-        $sql = "UPDATE data_registration SET status_sms = '0', username_update = ? WHERE status_sms = 1 ";
+        $sql = "UPDATE data_registration SET date_update = NOW(), status_sms = '0', username_update = ? WHERE status_sms = 1 ";
 
         if (!empty($phone_number) && !empty($rekening)) {
             // Both phone number and account number are provided
@@ -281,7 +281,7 @@ class Actions extends DBConnection
         }
 
         // Update status_email to '0' based on phone_number or rekening
-        $sql = "UPDATE data_registration SET status_email = '0', username_update = ? WHERE status_email = 1 ";
+        $sql = "UPDATE data_registration SET date_update = NOW(), status_email = '0', username_update = ? WHERE status_email = 1 ";
 
         if (!empty($phone_number) && !empty($rekening)) {
             // Both phone number and account number are provided
@@ -319,7 +319,7 @@ class Actions extends DBConnection
         }
 
         // Update status_wa to '0' based on phone_number or rekening
-        $sql = "UPDATE data_registration SET status_wa = '0', username_update = ? WHERE status_wa = 1 ";
+        $sql = "UPDATE data_registration SET date_update = NOW(), status_wa = '0', username_update = ? WHERE status_wa = 1 ";
 
         if (!empty($phone_number) && !empty($rekening)) {
             // Both phone number and account number are provided
