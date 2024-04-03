@@ -193,9 +193,6 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
         });
 
 
-
-
-
         function clearTable() {
             // Clear the table content
             var tableBody = document.querySelector('#smsNotificationResult table tbody');
