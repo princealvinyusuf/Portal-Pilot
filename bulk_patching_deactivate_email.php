@@ -115,6 +115,7 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
 
     <script>
 
+
         document.getElementById('uploadForm').addEventListener('submit', function (event) {
             event.preventDefault(); // Prevent form submission
 
@@ -147,6 +148,34 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
                     // Check if the row count of non-empty rows exceeds 50
                     if (nonEmptyRows.length > 51) {
                         alert('Row count exceeds 50. Please upload a file with fewer rows.');
+                        return; // Exit function
+                    }
+
+                    // Track unique combinations of row
+                    var uniqueCombinations = new Set();
+                    var duplicateData = [];
+
+                    // Check for duplicate data
+                    var duplicateFound = false;
+                    for (var i = 0; i < jsonData.length; i++) {
+                        var row = jsonData[i];
+                        if (Object.keys(row).length > 0) { // Exclude empty rows
+                            var emailaddress = row[0];
+                            var accountNumber = row[1];
+                            var combination = emailaddress + '-' + accountNumber;
+                            if (uniqueCombinations.has(combination)) {
+                                duplicateFound = true;
+                                duplicateData.push(row);
+                            } else {
+                                uniqueCombinations.add(combination);
+                            }
+                        }
+                    }
+
+                    if (duplicateFound) {
+                        console.log('Duplicate data found:');
+                        console.log(duplicateData);
+                        alert('Duplicate data found. Please upload a file without duplicate entries.');
                         return; // Exit function
                     }
 
