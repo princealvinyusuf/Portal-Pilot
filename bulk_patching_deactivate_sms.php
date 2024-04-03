@@ -151,6 +151,34 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
                         return; // Exit function
                     }
 
+                    // Track unique combinations of phone numbers and account numbers
+                    var uniqueCombinations = new Set();
+                    var duplicateData = [];
+
+                    // Check for duplicate data
+                    var duplicateFound = false;
+                    for (var i = 0; i < jsonData.length; i++) {
+                        var row = jsonData[i];
+                        if (Object.keys(row).length > 0) { // Exclude empty rows
+                            var phoneNumber = row[0]; // Assuming phone number is in the first column
+                            var accountNumber = row[1]; // Assuming account number is in the second column
+                            var combination = phoneNumber + '-' + accountNumber;
+                            if (uniqueCombinations.has(combination)) {
+                                duplicateFound = true;
+                                duplicateData.push(row);
+                            } else {
+                                uniqueCombinations.add(combination);
+                            }
+                        }
+                    }
+
+                    if (duplicateFound) {
+                        console.log('Duplicate data found:');
+                        console.log(duplicateData);
+                        alert('Duplicate data found. Please upload a file without duplicate entries.');
+                        return; // Exit function
+                    }
+
                     // Process the data
                     processData(jsonData);
 
@@ -163,6 +191,8 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
                 reader.readAsArrayBuffer(file);
             }
         });
+
+
 
 
 
