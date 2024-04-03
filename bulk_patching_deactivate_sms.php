@@ -140,9 +140,13 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
                     var worksheet = workbook.Sheets[sheetName];
                     var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
 
-                    // Check if the row count exceeds 50
-                    if (jsonData.length > 50) {
-                        console.log(jsonData.length)
+                    // Filter out empty rows
+                    var nonEmptyRows = jsonData.filter(function (row) {
+                        return Object.keys(row).length > 0;
+                    });
+
+                    // Check if the row count of non-empty rows exceeds 50
+                    if (nonEmptyRows.length > 51) {
                         alert('Row count exceeds 50. Please upload a file with fewer rows.');
                         return; // Exit function
                     }
@@ -159,7 +163,6 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
                 reader.readAsArrayBuffer(file);
             }
         });
-
 
 
 
