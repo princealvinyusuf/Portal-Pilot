@@ -116,7 +116,6 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
         var ajaxRequestsCount = 0; // Variable to count the number of AJAX requests made
         var ajaxResponsesCount = 0; // Variable to count the number of AJAX responses received
 
-
         document.getElementById('uploadForm').addEventListener('submit', function (event) {
             event.preventDefault(); // Prevent form submission
 
@@ -127,6 +126,12 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
             var file = fileInput.files[0];
 
             if (file) {
+                // Check file size
+                if (file.size > 15000) { // 15KB = 15000 bytes
+                    alert('File size exceeds 15KB. Please upload a smaller file.');
+                    return; // Exit function
+                }
+
                 var reader = new FileReader();
                 reader.onload = function (e) {
                     var data = new Uint8Array(e.target.result);
@@ -135,12 +140,28 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
                     var worksheet = workbook.Sheets[sheetName];
                     var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
 
+                    // Check if the row count exceeds 50
+                    if (jsonData.length > 50) {
+                        console.log(jsonData.length)
+                        alert('Row count exceeds 50. Please upload a file with fewer rows.');
+                        return; // Exit function
+                    }
+
                     // Process the data
                     processData(jsonData);
+
+                    // Close the workbook
+                    workbook = null; // or workbook = undefined;
+
+                    // Reset jsonData for next file upload
+                    jsonData = null;
                 };
                 reader.readAsArrayBuffer(file);
             }
         });
+
+
+
 
         function clearTable() {
             // Clear the table content
