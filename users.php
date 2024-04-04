@@ -56,7 +56,7 @@ require_once ('DBConnection.php');
                                 <?php echo $row['contact'] ?>
                             </td>
                             <td class="py-1 px-2">
-                                <?php echo $row['address'] ?>
+                                <?php echo $row['email_address'] ?>
                             </td>
                             <td class="py-1 px-2">
                                 <?php echo $row['access_level'] ?>
