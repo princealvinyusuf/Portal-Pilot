@@ -157,7 +157,7 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
 
                     // Check for duplicate data
                     var duplicateFound = false;
-                    for (var i = 0; i < jsonData.length; i++) {
+                    for (var i = 1; i < jsonData.length; i++) {
                         var row = jsonData[i];
                         if (Object.keys(row).length > 0) { // Exclude empty rows
                             var emailaddress = row[0];
@@ -168,6 +168,18 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
                                 duplicateData.push(row);
                             } else {
                                 uniqueCombinations.add(combination);
+                                
+                                // Check if account number contains characters other than numbers and stars
+                                if (!/^[0-9*]+$/.test(accountNumber)) {
+                                    alert('Invalid account number: ' + accountNumber + '. Please upload a file with valid account numbers.');
+                                    return; // Exit function
+                                }
+
+                                // Check if account number has more than 15 characters
+                                if (accountNumber.length > 15) {
+                                    alert('Account number exceeds 15 characters: ' + accountNumber + '. Please upload a file with account numbers of maximum 15 characters.');
+                                    return; // Exit function
+                                }
                             }
                         }
                     }
