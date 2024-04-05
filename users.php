@@ -34,7 +34,7 @@ require_once ('DBConnection.php');
                         <th class="py-1 px-2"></th>
                         <th class="py-1 px-2">Name</th>
                         <th class="py-1 px-2">Contact</th>
-                        <th class="py-1 px-2">Address</th>
+                        <th class="py-1 px-2">Email Address</th>
                         <th class="py-1 px-2">Role</th>
                         <th class="py-1 px-2">Action</th>
                     </tr>

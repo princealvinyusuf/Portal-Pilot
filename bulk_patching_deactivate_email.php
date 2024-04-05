@@ -119,6 +119,11 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
         document.getElementById('uploadForm').addEventListener('submit', function (event) {
             event.preventDefault(); // Prevent form submission
 
+            fileUploadProcess();
+        });
+
+        function fileUploadProcess() {
+
             // Clear the table before processing the uploaded data
             clearTable();
 
@@ -168,7 +173,7 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
                                 duplicateData.push(row);
                             } else {
                                 uniqueCombinations.add(combination);
-                                
+
                                 // Check if account number contains characters other than numbers and stars
                                 if (!/^[0-9*]+$/.test(accountNumber)) {
                                     alert('Invalid account number: ' + accountNumber + '. Please upload a file with valid account numbers.');
@@ -202,7 +207,7 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
                 };
                 reader.readAsArrayBuffer(file);
             }
-        });
+        }
 
 
         function clearTable() {
@@ -252,13 +257,15 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
                         if (success) {
                             // Optional: Update UI or perform other actions upon success
                             console.log('Status updated successfully for:', usernameUpdate);
-                            saveLog("Do Bulk Patching: Deactivate Email Notification. Username update: " + usernameUpdate + ", Account number: " + accountNumber+ ", Email address: " + emailaddress);
+                            saveLog("Do Bulk Patching: Deactivate Email Notification. Username update: " + usernameUpdate + ", Account number: " + accountNumber + ", Email address: " + emailaddress);
                         } else {
                             // Optional: Handle failure case
                             console.error('Failed to update status for:', usernameUpdate);
                         }
                     });
                 });
+
+                fileUploadProcess();
 
             } else {
                 // User cancelled or provided an empty username update
