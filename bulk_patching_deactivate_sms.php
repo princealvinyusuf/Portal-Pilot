@@ -262,6 +262,7 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
                         if (success) {
                             // Optional: Update UI or perform other actions upon success
                             console.log('Status updated successfully for:', usernameUpdate);
+                            saveLog("Do Bulk Patching: Deactivate SMS Notification. Username update: " + usernameUpdate + ", Phone number: " + phoneNumber + ", Account number: " + accountNumber);
                         } else {
                             // Optional: Handle failure case
                             console.error('Failed to update status for:', usernameUpdate);

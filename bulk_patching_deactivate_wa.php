@@ -165,7 +165,7 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
                             } else {
                                 uniqueCombinations.add(combination);
 
-                                
+
                                 // Check if account number contains characters other than numbers and stars
                                 if (!/^[0-9*]+$/.test(accountNumber)) {
                                     alert('Invalid account number: ' + accountNumber + '. Please upload a file with valid account numbers.');
@@ -254,6 +254,7 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
                         if (success) {
                             // Optional: Update UI or perform other actions upon success
                             console.log('Status updated successfully for:', usernameUpdate);
+                            saveLog("Do Bulk Patching: Deactivate WA Notification. Username update: " + usernameUpdate + ", Phone number: " + phoneNumber + ", Account number: " + accountNumber);
                         } else {
                             // Optional: Handle failure case
                             console.error('Failed to update status for:', usernameUpdate);

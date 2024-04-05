@@ -245,12 +245,14 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
                 document.querySelectorAll('#smsNotificationResult table tbody tr').forEach(function (row) {
                     var phoneNumber = row.querySelector('[data-phone]').getAttribute('data-phone');
                     var accountNumber = row.querySelector('[data-rekening]').getAttribute('data-rekening');
+                    var emailaddress = row.querySelector('[data-email]').getAttribute('data-email');
 
                     // Call updateStatusSMS function for each row
                     updateStatusSMS(usernameUpdate, phoneNumber, accountNumber, function (success) {
                         if (success) {
                             // Optional: Update UI or perform other actions upon success
                             console.log('Status updated successfully for:', usernameUpdate);
+                            saveLog("Do Bulk Patching: Deactivate Email Notification. Username update: " + usernameUpdate + ", Account number: " + accountNumber+ ", Email address: " + emailaddress);
                         } else {
                             // Optional: Handle failure case
                             console.error('Failed to update status for:', usernameUpdate);
