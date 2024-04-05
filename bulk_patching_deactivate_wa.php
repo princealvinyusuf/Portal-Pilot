@@ -115,6 +115,11 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
         document.getElementById('uploadForm').addEventListener('submit', function (event) {
             event.preventDefault(); // Prevent form submission
 
+            fileUploadProcess();
+
+        });
+
+        function fileUploadProcess() {
             // Clear the table before processing the uploaded data
             clearTable();
 
@@ -205,7 +210,7 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
                 };
                 reader.readAsArrayBuffer(file);
             }
-        });
+        }
 
 
         function clearTable() {
@@ -261,6 +266,8 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
                         }
                     });
                 });
+
+                fileUploadProcess();
 
             } else {
                 // User cancelled or provided an empty username update
