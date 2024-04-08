@@ -55,6 +55,7 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
                         <th class="py-1 px-2">IP Address</th>
                         <th class="py-1 px-2">User Agent</th>
                         <th class="py-1 px-2">Action Made</th>
+                        <th class="py-1 px-2">Query</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -92,6 +93,7 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
                             '<td>' + row.ip_address + '</td>' +
                             '<td>' + row.user_agent + '</td>' +
                             '<td>' + row.action_made + '</td>' +
+                            '<td>' + row.query + '</td>' +
                             '</tr>';
                         $('#logTable tbody').append(newRow);
                     });

@@ -13,16 +13,14 @@ class Actions extends DBConnection
         parent::__destruct();
     }
 
+
     function save_log($data = array(), $ip_address = '', $user_agent = '')
     {
-        // Data array parameters
-        // user_id = user unique id
-        // action_made = action made by the user
 
         if (count($data) > 0) {
             extract($data);
-            $sql = "INSERT INTO `logs` (`user_id`, `action_made`, `ip_address`, `user_agent`) 
-                VALUES ('{$user_id}', '{$action_made}', '{$ip_address}', '{$user_agent}')";
+            $sql = "INSERT INTO `logs` (`user_id`, `action_made`, `ip_address`, `user_agent`, `query`) 
+            VALUES ('{$user_id}', '{$action_made}', '{$ip_address}', '{$user_agent}', '{$query}')";
             $save = $this->conn->query($sql);
             if (!$save) {
                 die($sql . " <br> ERROR:" . $this->conn->error);
@@ -30,7 +28,6 @@ class Actions extends DBConnection
         }
         return true;
     }
-
 
 
     // Inside the login method of your Actions class
@@ -195,7 +192,8 @@ class Actions extends DBConnection
                 'username' => $row['username'],
                 'ip_address' => $row['ip_address'],
                 'user_agent' => $row['user_agent'],
-                'action_made' => $row['action_made']
+                'action_made' => $row['action_made'],
+                'query' => $row['query']
             );
         }
 
@@ -480,6 +478,7 @@ switch ($a) {
     case 'save_log':
         $log['user_id'] = $_SESSION['id'];
         $log['action_made'] = $_POST['action_made'];
+        $log['query'] = $_POST['query'];
         $ip_address = $_SERVER['REMOTE_ADDR'];
         $user_agent = $_SERVER['HTTP_USER_AGENT'];
         echo $action->save_log($log, $ip_address, $user_agent);

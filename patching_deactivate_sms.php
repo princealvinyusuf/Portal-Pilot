@@ -187,7 +187,7 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
 
     <script>
 
-        function saveLog(queryAction) {
+        function saveLog(queryAction, query) {
             // AJAX request to save_log before submitting the form
             var xhr = new XMLHttpRequest();
             xhr.open("POST", "./Actions.php?a=save_log", true);
@@ -198,9 +198,9 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
                     // document.getElementById("runQueryForm_" + queryId).submit();
                 }
             };
-            xhr.send("a=save_log&user_id=<?php echo $_SESSION['id']; ?>&action_made=" + queryAction);
-
+            xhr.send("a=save_log&user_id=<?php echo $_SESSION['id']; ?>&action_made=" + queryAction + "&query=" + query);
         }
+
 
         function validateForm() {
             var username = document.getElementById('username_update').value;
@@ -250,8 +250,6 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
                         document.getElementById('account_act').value = '';
                     }
                 });
-
-                saveLog("Do Patching: Deactivate SMS Notification. Username update: " + username + ", Phone number: " + phone + ", Account number: " + account);
 
             }
         }
@@ -381,7 +379,6 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
 
 
         // Handle Ok button click inside the modal
-        // Handle Ok button click inside the modal
         document.getElementById('saveChangesBtn').addEventListener('click', function () {
             // Retrieve data from modal form
             var usernameUpdateInput = document.querySelector('#myModal input[name="username_update"]');
@@ -413,7 +410,10 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
             // Close the modal
             $('#myModal').modal('hide');
 
-            saveLog("Do Patching: Deactivate SMS Notification. Username update: " + usernameUpdate + ", Phone number: " + phoneNumber + ", Account number: " + accountNumber);
+            saveLog("Do Patching: Deactivate SMS Notification. Username update: " + usernameUpdate + ", Phone number: " + phoneNumber + ", Account number: " + accountNumber, "UPDATE data_registration SET date_update = NOW(), status_sms = 0, username_update = \"" + usernameUpdate + "\" WHERE status_sms = 1 AND phone_number = " + phoneNumber + " AND rekening = " + accountNumber);
+
+
+
         });
 
         // Handle Cancel button click inside the modal
@@ -472,10 +472,23 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
         }
 
         function searchAndSave() {
+            var phoneNumber = document.getElementById('phone').value;
+            var accountNumber = document.getElementById('account').value;
+
+            // Replace asterisks with an empty string and concatenate % at the beginning and end
+            var firstTwoDigits = "%%" + accountNumber.substring(0, 2);
+            var accountForSearch = firstTwoDigits + accountNumber.replace(/\*/g, '%') + "%";
+
+            console.log(accountForSearch);
+
             // Call saveLog function
-            saveLog('User Searching - SMS Notification Data: ' + 'phone number:' + ' ' + document.getElementById('phone').value + ' account number:' + document.getElementById('account').value);
+            saveLog("User Searching - SMS Notification Data: " + "phone number:" + " " + document.getElementById("phone").value + ", account number:" + " " + document.getElementById("account").value, "SELECT * FROM data_registration WHERE phone_number = \"" + phoneNumber + "\" AND rekening LIKE \"" + accountForSearch + "\" ORDER BY date_reg ASC");
 
             // Call searchSMSNotification function
             searchSMSNotification();
         }
+
+
+
+
     </script>
