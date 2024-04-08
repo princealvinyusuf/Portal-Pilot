@@ -14,24 +14,16 @@ class Actions extends DBConnection
     }
 
 
-    function save_log($action_made)
+    function save_log($data = array(), $ip_address = '', $user_agent = '')
     {
-        $log['user_id'] = $_SESSION['id'];
-        $log['action_made'] = $action_made;
-        $ip_address = $_SERVER['REMOTE_ADDR'];
-        $user_agent = $_SERVER['HTTP_USER_AGENT'];
+        // Data array parameters
+        // user_id = user unique id
+        // action_made = action made by the user
 
-        // Call the original save_log method with extracted values
-        return $this->save_log_with_details($log, $ip_address, $user_agent);
-    }
-
-    // Helper method to actually save the log with extracted details
-    private function save_log_with_details($log, $ip_address, $user_agent)
-    {
-        if (count($log) > 0) {
-            extract($log);
+        if (count($data) > 0) {
+            extract($data);
             $sql = "INSERT INTO `logs` (`user_id`, `action_made`, `ip_address`, `user_agent`) 
-            VALUES ('{$user_id}', '{$action_made}', '{$ip_address}', '{$user_agent}')";
+                VALUES ('{$user_id}', '{$action_made}', '{$ip_address}', '{$user_agent}')";
             $save = $this->conn->query($sql);
             if (!$save) {
                 die($sql . " <br> ERROR:" . $this->conn->error);
@@ -76,8 +68,13 @@ class Actions extends DBConnection
                     if (!is_numeric($k))
                         $_SESSION[$k] = $v;
                 }
-                // Log the action without explicitly passing $log, $ip_address, $user_agent
-                $this->save_log("Logged in the system.");
+                $log['user_id'] = $qry['id'];
+                $log['action_made'] = "Logged in the system.";
+                $ip_address = $_SERVER['REMOTE_ADDR'];
+                $user_agent = $_SERVER['HTTP_USER_AGENT'];
+
+                // audit log
+                // $this->save_log($log, $ip_address, $user_agent);
             } else {
                 $resp['status'] = "failed";
                 $resp['msg'] = "Access denied. You don't have permission to access this system.";
@@ -86,8 +83,7 @@ class Actions extends DBConnection
         return json_encode($resp);
     }
 
-
-
+    
 
     function logout()
     {
