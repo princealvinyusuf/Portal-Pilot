@@ -93,6 +93,11 @@
                                 <br>
                             </div>
                             <div class="form-group">
+                                <label for="email_address" class="control-label">Email Address</label>
+                                <input type="text" name="email_address" class="form-control form-control-sm rounded-0"
+                                    value="" readonly>
+                            </div>
+                            <div class="form-group d-none">
                                 <label for="phone_number" class="control-label">Phone Number</label>
                                 <input type="text" name="phone_number" class="form-control form-control-sm rounded-0"
                                     value="" readonly>
@@ -134,10 +139,10 @@
         var usernameGlobal = '<?php echo isset($_SESSION["username"]) ? $_SESSION["username"] : "" ?>';
         console.log(usernameGlobal);
 
-        function saveLog(queryAction) {
+        function saveLog(queryAction, query) {
             // AJAX request to save_log before submitting the form
             var xhr = new XMLHttpRequest();
-            xhr.open("POST", "./Actions.php?a=save_log", true);
+            xhr.open("POST", "./Actions.php?a=save_log_with_query", true);
             xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4 && xhr.status === 200) {
@@ -145,8 +150,7 @@
                     // document.getElementById("runQueryForm_" + queryId).submit();
                 }
             };
-            xhr.send("a=save_log&user_id=<?php echo $_SESSION['id']; ?>&action_made=" + queryAction);
-
+            xhr.send("a=save_log&user_id=<?php echo $_SESSION['id']; ?>&action_made=" + queryAction + "&query=" + query);
         }
 
         function searchSMSNotification() {
@@ -214,7 +218,7 @@
                 tableHtml += '<td>' + row.phone_number + '</td>';
                 tableHtml += '<td>' + row.username_update + '</td>';
                 tableHtml += '<td>' + row.status_email + '</td>';
-                tableHtml += '<td><button class="btn btn-primary run_sms" data-username="' + row.username_update + '" data-phone="' + row.phone_number + '" data-rekening="' + row.rekening + '">Patch</button></td>';
+                tableHtml += '<td><button class="btn btn-primary run_sms" data-username="' + row.username_update + '" data-email="' + row.email + '" data-rekening="' + row.rekening + '" data-phone="' + row.phone_number + '">Patch</button></td>';
                 tableHtml += '</tr>';
             });
 
@@ -250,8 +254,9 @@
 
 
         function showModal() {
-            var phoneNumber = this.getAttribute('data-phone');
+            var emailAddress = this.getAttribute('data-email');
             var accountNumber = this.getAttribute('data-rekening');
+            var phoneNumber = this.getAttribute('data-phone');
 
             // Show alert to input usernameUpdate
             var usernameUpdate = prompt("Enter Username Update:");
@@ -260,13 +265,15 @@
             }
 
             // Populate modal fields with data from the row
-            document.querySelector('#myModal input[name="phone_number"]').value = phoneNumber;
+            document.querySelector('#myModal input[name="email_address"]').value = emailAddress;
             document.querySelector('#myModal input[name="account_number"]').value = accountNumber;
             document.querySelector('#myModal input[name="username_update"]').value = usernameUpdate;
+            document.querySelector('#myModal input[name="phone_number"]').value = phoneNumber;
             // Disable input fields
             document.querySelector('#myModal input[name="username_update"]').readOnly = true;
-            document.querySelector('#myModal input[name="phone_number"]').readOnly = true;
+            document.querySelector('#myModal input[name="email_address"]').readOnly = true;
             document.querySelector('#myModal input[name="account_number"]').readOnly = true;
+            document.querySelector('#myModal input[name="phone_number"]').readOnly = true;
 
             // Show the modal
             $('#myModal').modal('show');
@@ -277,12 +284,14 @@
         document.getElementById('saveChangesBtn').addEventListener('click', function () {
             // Retrieve data from modal form
             var usernameUpdateInput = document.querySelector('#myModal input[name="username_update"]');
-            var phoneNumberInput = document.querySelector('#myModal input[name="phone_number"]');
             var accountNumberInput = document.querySelector('#myModal input[name="account_number"]');
+            var emailAddressInput = document.querySelector('#myModal input[name="email_address"]');
+            var phoneNumberInput = document.querySelector('#myModal input[name="phone_number"]');
 
             var usernameUpdate = usernameUpdateInput.value;
             var phoneNumber = phoneNumberInput.value;
             var accountNumber = accountNumberInput.value;
+            var emailAddress = emailAddressInput.value;
 
             // Validate username update field
             if (usernameUpdate.trim() === '') {
@@ -305,7 +314,7 @@
             // Close the modal
             $('#myModal').modal('hide');
 
-            saveLog("Do Patching: Deactivate Email Notification. Username update: " + usernameUpdate + ", Phone number: " + phoneNumber + ", Account number: " + accountNumber);
+            saveLog("Do Patching: Deactivate Email Notification. Username update: " + usernameUpdate + ", Email Address: " + emailAddress + ", Account number: " + accountNumber, "UPDATE data_registration SET date_update = NOW(), status_email = 0, username_update = \"" + usernameUpdate + "\" WHERE status_email = 1 AND email_address = " + emailAddress + " AND rekening = " + accountNumber);
         });
 
         // Handle Cancel button click inside the modal
@@ -366,8 +375,17 @@
 
 
         function searchAndSave() {
+            var emailAddress = document.getElementById('email').value;
+            var accountNumber = document.getElementById('account').value;
+
+            // Replace asterisks with an empty string and concatenate % at the beginning and end
+            var firstTwoDigits = "%%" + accountNumber.substring(0, 2);
+            var accountForSearch = firstTwoDigits + accountNumber.replace(/\*/g, '%') + "%";
+
+            console.log(accountForSearch);
+
             // Call saveLog function
-            saveLog('User Searching: Email Notification Data: ' + 'account number: ' + document.getElementById('account').value + ' ' + 'email address: ' + document.getElementById('email').value);
+            saveLog('User Searching: Email Notification Data: ' + 'account number: ' + document.getElementById('account').value + ' ' + 'email address: ' + document.getElementById('email').value, "SELECT * FROM data_registration WHERE email_address = \"" + emailAddress + "\" AND rekening LIKE \"" + accountForSearch + "\" ORDER BY date_reg ASC");
 
             // Call searchSMSNotification function
             searchSMSNotification();
