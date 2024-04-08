@@ -52,7 +52,6 @@ class Actions extends DBConnection
                 }
                 $log['user_id'] = $qry['id'];
                 $log['action_made'] = "Logged in the system.";
-                $log['query'] = "";
                 $ip_address = $_SERVER['REMOTE_ADDR'];
                 $user_agent = $_SERVER['HTTP_USER_AGENT'];
 
@@ -71,7 +70,6 @@ class Actions extends DBConnection
     {
         $log['user_id'] = $_SESSION['id'];
         $log['action_made'] = "Logged out.";
-        $log['query'] = "";
         $ip_address = $_SERVER['REMOTE_ADDR'];
         $user_agent = $_SERVER['HTTP_USER_AGENT'];
 
@@ -119,11 +117,9 @@ class Actions extends DBConnection
                 $resp['msg'] = "New User successfully added.";
                 // $log['action_made'] = " added [id={$user_id}] {$name} into the user list.";
                 $log['action_made'] = "Added new user: {$name} into the user list.";
-                $log['query'] = "MASUKKAN QUERY DI SAVE USER";
             } else {
                 $resp['msg'] = "User successfully updated.";
                 $log['action_made'] = "Updated the details of: {$name} account.";
-                $log['query'] = "MASUKKAN QUERY DI UPDATE USER";
             }
 
             // Get IP address and user agent
@@ -151,7 +147,6 @@ class Actions extends DBConnection
             $resp['msg'] = 'User successfully deleted.';
             $log['user_id'] = $_SESSION['id'];
             $log['action_made'] = "Deleted User: {$mem['name']} from user list.";
-            $log['query'] = "MASUKKAN QUERY DELETE USER";
             $ip_address = $_SERVER['REMOTE_ADDR'];
             $user_agent = $_SERVER['HTTP_USER_AGENT'];
             $_SESSION['flashdata']['type'] = 'success';
