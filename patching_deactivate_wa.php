@@ -136,10 +136,10 @@
         var usernameGlobal = '<?php echo isset($_SESSION["username"]) ? $_SESSION["username"] : "" ?>';
         console.log(usernameGlobal);
 
-        function saveLog(queryAction) {
+        function saveLog(queryAction, query) {
             // AJAX request to save_log before submitting the form
             var xhr = new XMLHttpRequest();
-            xhr.open("POST", "./Actions.php?a=save_log", true);
+            xhr.open("POST", "./Actions.php?a=save_log_with_query", true);
             xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4 && xhr.status === 200) {
@@ -147,9 +147,9 @@
                     // document.getElementById("runQueryForm_" + queryId).submit();
                 }
             };
-            xhr.send("a=save_log&user_id=<?php echo $_SESSION['id']; ?>&action_made=" + queryAction);
-
+            xhr.send("a=save_log&user_id=<?php echo $_SESSION['id']; ?>&action_made=" + queryAction + "&query=" + query);
         }
+
 
         function searchSMSNotification() {
             // Get search parameters
@@ -308,7 +308,10 @@
             // Close the modal
             $('#myModal').modal('hide');
 
-            saveLog("Do Patching: Deactivate WA Notification. Username update: " + usernameUpdate + ", Phone number: " + phoneNumber + ", Account number: " + accountNumber);
+            saveLog("Do Patching: Deactivate WA Notification. Username update: " + usernameUpdate + ", Phone number: " + phoneNumber + ", Account number: " + accountNumber, "UPDATE data_registration SET date_update = NOW(), status_wa = 0, username_update = \"" + usernameUpdate + "\" WHERE status_wa = 1 AND phone_number = " + phoneNumber + " AND rekening = " + accountNumber);
+
+
+
         });
 
         // Handle Cancel button click inside the modal
@@ -369,8 +372,17 @@
 
 
         function searchAndSave() {
+            var phoneNumber = document.getElementById('phone').value;
+            var accountNumber = document.getElementById('account').value;
+
+            // Replace asterisks with an empty string and concatenate % at the beginning and end
+            var firstTwoDigits = "%%" + accountNumber.substring(0, 2);
+            var accountForSearch = firstTwoDigits + accountNumber.replace(/\*/g, '%') + "%";
+
+            console.log(accountForSearch);
+
             // Call saveLog function
-            saveLog('User Searching: WA Notification Data: ' + 'phone number:' + ' ' + document.getElementById('phone').value + ' account number:' + document.getElementById('account').value);
+            saveLog("User Searching - WA Notification Data: " + "phone number:" + " " + document.getElementById("phone").value + ", account number:" + " " + document.getElementById("account").value, "SELECT * FROM data_registration WHERE phone_number = \"" + phoneNumber + "\" AND rekening LIKE \"" + accountForSearch + "\" ORDER BY date_reg ASC");
 
             // Call searchSMSNotification function
             searchSMSNotification();
