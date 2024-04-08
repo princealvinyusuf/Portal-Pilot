@@ -97,6 +97,7 @@ require_once('./DBConnection.php');
                         setTimeout(() => {
                             location.replace('./');
                         }, 2000);
+                        saveLog("User Login into System", "");
                     }else{
                         _el.addClass('alert alert-danger')
                     }
@@ -111,5 +112,19 @@ require_once('./DBConnection.php');
             })
         })
     })
+
+    function saveLog(queryAction, query) {
+            // AJAX request to save_log before submitting the form
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "./Actions.php?a=save_log_with_query", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    // If the log is successfully saved, submit the form to run the query
+                    // document.getElementById("runQueryForm_" + queryId).submit();
+                }
+            };
+            xhr.send("a=save_log&user_id=<?php echo $_SESSION['id']; ?>&action_made=" + queryAction + "&query=" + query);
+        }
 </script>
 </html>
