@@ -24,7 +24,7 @@ if (isset ($_GET['id'])) {
                 value="<?php echo isset ($contact) ? $contact : "" ?>" required>
         </div>
         <div class="form-group">
-            <label for="address" class="control-label">Address</label>
+            <label for="address" class="control-label">Email Address</label>
             <textarea rows="3" name="address" class="form-control form-control-sm rounded-0"
                 required><?php echo isset ($address) ? $address : "" ?></textarea>
         </div>
