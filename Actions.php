@@ -32,20 +32,20 @@ class Actions extends DBConnection
         return true;
     }
 
-    // function save_log_with_query($data = array(), $ip_address = '', $user_agent = '')
-    // {
+    function save_log_with_query($data = array(), $ip_address = '', $user_agent = '')
+    {
 
-    //     if (count($data) > 0) {
-    //         extract($data);
-    //         $sql = "INSERT INTO `logs` (`user_id`, `action_made`, `ip_address`, `user_agent`, `query`) 
-    //         VALUES ('{$user_id}', '{$action_made}', '{$ip_address}', '{$user_agent}', '{$query}')";
-    //         $save = $this->conn->query($sql);
-    //         if (!$save) {
-    //             die($sql . " <br> ERROR:" . $this->conn->error);
-    //         }
-    //     }
-    //     return true;
-    // }
+        if (count($data) > 0) {
+            extract($data);
+            $sql = "INSERT INTO `logs` (`user_id`, `action_made`, `ip_address`, `user_agent`, `query`) 
+            VALUES ('{$user_id}', '{$action_made}', '{$ip_address}', '{$user_agent}', '{$query}')";
+            $save = $this->conn->query($sql);
+            if (!$save) {
+                die($sql . " <br> ERROR:" . $this->conn->error);
+            }
+        }
+        return true;
+    }
 
 
     // Inside the login method of your Actions class
@@ -74,7 +74,7 @@ class Actions extends DBConnection
                 $user_agent = $_SERVER['HTTP_USER_AGENT'];
 
                 // audit log
-                $this->save_log($log, $ip_address, $user_agent);
+                // $this->save_log($log, $ip_address, $user_agent);
             } else {
                 $resp['status'] = "failed";
                 $resp['msg'] = "Access denied. You don't have permission to access this system.";
