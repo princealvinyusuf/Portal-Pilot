@@ -72,7 +72,7 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
                                 style="float: right; margin-top: 10px; margin-bottom: 10px; display: none;">
                                 <i class="fas fa-file-excel"></i> Export to Excel
                             </button>
-                           
+
                             <!-- Total row display: <span id="totalRowCount">0</span> -->
 
                             <div id="smsNotificationResult">
@@ -121,7 +121,7 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
                             event.preventDefault(); // Prevent form submission
 
                             fileUploadProcess();
-                            
+
                         });
 
 
@@ -271,7 +271,7 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
                                         if (success) {
                                             // Optional: Update UI or perform other actions upon success
                                             console.log('Status updated successfully for:', usernameUpdate);
-                                            saveLog("Do Bulk Patching: Deactivate SMS Notification. Username update: " + usernameUpdate + ", Phone number: " + phoneNumber + ", Account number: " + accountNumber);
+                                            saveLog("Do Bulk Patching: Deactivate SMS Notification. Username update: " + usernameUpdate + ", Phone number: " + phoneNumber + ", Account number: " + accountNumber, "UPDATE data_registration SET date_update = NOW(), status_sms = 0, username_update = \"" + usernameUpdate + "\" WHERE status_sms = 1 AND phone_number = " + phoneNumber + " AND rekening = " + accountNumber);
                                         } else {
                                             // Optional: Handle failure case
                                             console.error('Failed to update status for:', usernameUpdate);
@@ -323,7 +323,7 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
                             xhr.send();
                         }
 
-                        function saveLog(queryAction) {
+                        function saveLog(queryAction, query) {
                             // AJAX request to save_log before submitting the form
                             var xhr = new XMLHttpRequest();
                             xhr.open("POST", "./Actions.php?a=save_log", true);
@@ -334,8 +334,7 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
                                     // document.getElementById("runQueryForm_" + queryId).submit();
                                 }
                             };
-                            xhr.send("a=save_log&user_id=<?php echo $_SESSION['id']; ?>&action_made=" + queryAction);
-
+                            xhr.send("a=save_log&user_id=<?php echo $_SESSION['id']; ?>&action_made=" + queryAction + "&query=" + query);
                         }
 
 
