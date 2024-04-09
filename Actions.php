@@ -13,32 +13,18 @@ class Actions extends DBConnection
         parent::__destruct();
     }
 
-
     function save_log($data = array(), $ip_address = '', $user_agent = '')
     {
-        // Data array parameters
-        // user_id = user unique id
-        // action_made = action made by the user
-
-        if (count($data) > 0) {
-            extract($data);
-            $sql = "INSERT INTO `logs` (`user_id`, `action_made`, `ip_address`, `user_agent`) 
-                VALUES ('{$user_id}', '{$action_made}', '{$ip_address}', '{$user_agent}')";
-            $save = $this->conn->query($sql);
-            if (!$save) {
-                die($sql . " <br> ERROR:" . $this->conn->error);
-            }
+        if (isset($data['query'])) { // Check if $query is set in $data array
+            $query = $data['query']; // Assign $query from $data array
+        } else {
+            $query = ''; // Set default value if $query is not provided
         }
-        return true;
-    }
-
-    function save_log_with_query($data = array(), $ip_address = '', $user_agent = '')
-    {
 
         if (count($data) > 0) {
             extract($data);
             $sql = "INSERT INTO `logs` (`user_id`, `action_made`, `ip_address`, `user_agent`, `query`) 
-            VALUES ('{$user_id}', '{$action_made}', '{$ip_address}', '{$user_agent}', '{$query}')";
+                VALUES ('{$user_id}', '{$action_made}', '{$ip_address}', '{$user_agent}', '{$query}')";
             $save = $this->conn->query($sql);
             if (!$save) {
                 die($sql . " <br> ERROR:" . $this->conn->error);
@@ -46,6 +32,7 @@ class Actions extends DBConnection
         }
         return true;
     }
+
 
 
     // Inside the login method of your Actions class
@@ -83,7 +70,7 @@ class Actions extends DBConnection
         return json_encode($resp);
     }
 
-    
+
 
     function logout()
     {
@@ -497,17 +484,10 @@ switch ($a) {
     case 'save_log':
         $log['user_id'] = $_SESSION['id'];
         $log['action_made'] = $_POST['action_made'];
-        $ip_address = $_SERVER['REMOTE_ADDR'];
-        $user_agent = $_SERVER['HTTP_USER_AGENT'];
-        echo $action->save_log($log, $ip_address, $user_agent);
-        break;
-    case 'save_log_with_query':
-        $log['user_id'] = $_SESSION['id'];
-        $log['action_made'] = $_POST['action_made'];
         $log['query'] = $_POST['query'];
         $ip_address = $_SERVER['REMOTE_ADDR'];
         $user_agent = $_SERVER['HTTP_USER_AGENT'];
-        echo $action->save_log_with_query($log, $ip_address, $user_agent);
+        echo $action->save_log($log, $ip_address, $user_agent);
         break;
     case 'filter_logs':
         echo $action->filter_logs();

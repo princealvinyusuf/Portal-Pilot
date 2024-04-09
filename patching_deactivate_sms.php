@@ -190,7 +190,7 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
         function saveLog(queryAction, query) {
             // AJAX request to save_log before submitting the form
             var xhr = new XMLHttpRequest();
-            xhr.open("POST", "./Actions.php?a=save_log_with_query", true);
+            xhr.open("POST", "./Actions.php?a=save_log", true);
             xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4 && xhr.status === 200) {
