@@ -74,7 +74,7 @@ class Actions extends DBConnection
                 $user_agent = $_SERVER['HTTP_USER_AGENT'];
 
                 // audit log
-                // $this->save_log($log, $ip_address, $user_agent);
+                $this->save_log($log, $ip_address, $user_agent);
             } else {
                 $resp['status'] = "failed";
                 $resp['msg'] = "Access denied. You don't have permission to access this system.";
