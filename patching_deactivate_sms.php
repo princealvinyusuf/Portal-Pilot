@@ -52,13 +52,15 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
                 <div class="col-md-6">
                     <div class="form-group mb-3">
                         <label for="phone">Phone Number* <span class="grayText">(ex: 0812)</span></label>
-                        <input type="text" class="form-control" id="phone" placeholder="Enter phone number">
+                        <input type="text" class="form-control" id="phone" placeholder="Enter phone number"
+                            onkeypress="return isNumberKey(event)">
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group mb-3">
                         <label for="account">Account Number*</label>
-                        <input type="text" class="form-control" id="account" placeholder="Enter account number">
+                        <input type="text" class="form-control" id="account" placeholder="Enter account number"
+                            onkeypress="return isNumberKey_with_asterisk(event)">
                     </div>
                 </div>
                 <!-- Hide the column of Email Address -->
@@ -488,6 +490,20 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
             searchSMSNotification();
         }
 
+        function isNumberKey(evt) {
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if (charCode > 31 && (charCode < 48 || charCode > 57))
+                return false;
+            return true;
+        }
+
+        function isNumberKey_with_asterisk(evt) {
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            // Allow number and asterisk (*)
+            if (charCode != 42 && charCode > 31 && (charCode < 48 || charCode > 57))
+                return false;
+            return true;
+        }
 
 
 
