@@ -23,8 +23,8 @@ $page = isset ($_GET['page']) ? $_GET['page'] : 'home';
     <script src="./js/jquery-3.6.0.min.js"></script>
     <script src="./js/popper.min.js"></script>
     <script src="./js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="./DataTables/datatables.min.css">
-    <script src="./DataTables/datatables.min.js"></script>
+    <!-- <link rel="stylesheet" href="./DataTables/datatables.min.css"> -->
+    <!-- <script src="./DataTables/datatables.min.js"></script> -->
     <script src="./fontawesome/js/all.min.js"></script>
     <script src="./js/script.js"></script>
     <style>
