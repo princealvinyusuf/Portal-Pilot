@@ -426,7 +426,7 @@ class Actions extends DBConnection
     }
 
 
-    function search_email_notification_bulk($email, $account, )
+    function search_email_notification_bulk($email, $account)
     {
         // Construct SQL query based on search parameters
         $whereClause = '';
@@ -518,14 +518,13 @@ switch ($a) {
         break;
     case 'search_sms_notification_bulk':
         // Assuming you have a method in your Actions class to handle the search
-        if (isset($_GET['phone']) || isset($_GET['account']) || isset($_GET['email'])) {
+        if (isset($_GET['phone']) || isset($_GET['account'])) {
             // Extract search parameters
             $phone = isset($_GET['phone']) ? $_GET['phone'] : '';
             $account = isset($_GET['account']) ? $_GET['account'] : '';
-            $email = isset($_GET['email']) ? $_GET['email'] : '';
 
             // Call the method to search SMS notification data
-            echo $action->search_sms_notification_bulk($phone, $account, $email);
+            echo $action->search_sms_notification_bulk($phone, $account);
         } else {
             // If search parameters are not provided, return an error message
             echo json_encode(['status' => 'failed', 'message' => 'Search parameters are missing.']);
@@ -533,9 +532,8 @@ switch ($a) {
         break;
     case 'search_email_notification_bulk':
         // Assuming you have a method in your Actions class to handle the search
-        if (isset($_GET['phone']) || isset($_GET['account']) || isset($_GET['email'])) {
+        if (isset($_GET['account']) || isset($_GET['email'])) {
             // Extract search parameters
-            $phone = isset($_GET['phone']) ? $_GET['phone'] : '';
             $account = isset($_GET['account']) ? $_GET['account'] : '';
             $email = isset($_GET['email']) ? $_GET['email'] : '';
 

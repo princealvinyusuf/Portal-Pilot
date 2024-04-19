@@ -174,6 +174,12 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
                             } else {
                                 uniqueCombinations.add(combination);
 
+                                // Check if email is empty or not
+                                if (emailaddress === undefined || emailaddress.trim() === '') {
+                                    alert('Invalid Email address: ' + emailaddress + '. Please upload a file with a valid email address.');
+                                    return; // Exit function
+                                }
+
                                 // Check if account number contains characters other than numbers and stars
                                 if (!/^[0-9*]+$/.test(accountNumber)) {
                                     alert('Invalid account number: ' + accountNumber + '. Please upload a file with valid account numbers.');
@@ -185,9 +191,11 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
                                     alert('Account number exceeds 15 characters: ' + accountNumber + '. Please upload a file with account numbers of maximum 15 characters.');
                                     return; // Exit function
                                 }
+
                             }
                         }
                     }
+
 
                     if (duplicateFound) {
                         console.log('Duplicate data found:');
@@ -258,7 +266,7 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
                             // Optional: Update UI or perform other actions upon success
                             console.log('Status updated successfully for:', usernameUpdate);
                             saveLog("Do Bulk Patching: Deactivate Email Notification. Username update: " + usernameUpdate + ", Email Address: " + emailaddress + ", Account number: " + accountNumber, "UPDATE data_registration SET date_update = NOW(), status_email = 0, username_update = \"" + usernameUpdate + "\" WHERE status_email = 1 AND email_address = " + emailaddress + " AND rekening = " + accountNumber);
-        
+
                         } else {
                             // Optional: Handle failure case
                             console.error('Failed to update status for:', usernameUpdate);
@@ -285,7 +293,7 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
 
             // AJAX request  to search SMS notification data
             var xhr = new XMLHttpRequest();
-            xhr.open("GET", "./Actions.php?a=search_email_notification_bulk&phone=" + email + "&account=" + account, true);
+            xhr.open("GET", "./Actions.php?a=search_email_notification_bulk&email=" + email + "&account=" + account, true);
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4 && xhr.status === 200) {
                     var response = JSON.parse(xhr.responseText);
