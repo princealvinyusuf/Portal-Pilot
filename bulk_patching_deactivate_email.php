@@ -274,7 +274,10 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
                     });
                 });
 
-                fileUploadProcess();
+                setTimeout(function () {
+                    fileUploadProcess();
+                }, 3000); // 3000 milliseconds = 3 seconds
+
 
             } else {
                 // User cancelled or provided an empty username update
