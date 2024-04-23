@@ -39,6 +39,8 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
     }
 </style>
 
+<title>Deaktivasi SMS Notifikasi</title>
+
 <div class="container py-5">
     <div class="d-flex w-100">
         <h3 class="col-auto flex-grow-1"><b>Patching - Menu Deaktivasi SMS Notifikasi</b></h3>

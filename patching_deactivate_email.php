@@ -15,6 +15,8 @@
     }
 </style>
 
+<title>Deaktivasi Email Notifikasi</title>
+
 <div class="container py-5">
     <div class="d-flex w-100">
         <h3 class="col-auto flex-grow-1"><b>Patching - Menu Deaktivasi Email Notifikasi</b></h3>

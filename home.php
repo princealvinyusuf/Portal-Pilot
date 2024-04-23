@@ -1,3 +1,6 @@
+
+<title>Portal Pilot</title>
+
 <!-- Total Users Online -->
 <div class="container">
     <div class="card bg-light">

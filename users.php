@@ -18,6 +18,9 @@ require_once ('DBConnection.php');
 
 // Your existing HTML and PHP code for the users page
 ?>
+
+<title>User Management</title>
+
 <div class="container py-5">
     <h3><b>Users List</b></h3>
     <div class="card">

@@ -33,6 +33,9 @@ if (!isset($_SESSION['access_level']) || !in_array($_SESSION['access_level'], ['
         display: none;
     }
 </style>
+
+<title>Bulk Deaktivasi Email Notifikasi</title>
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
     integrity="sha512-Lbi5sAXP9s79y+8OoZweWwYGfAkBhqVl0V83BL3WVdRQnKIo/zJ7T8iGYHzswkpsGvVD3svFVupgMZ38LqyWXw=="
     crossorigin="anonymous" referrerpolicy="no-referrer" />
